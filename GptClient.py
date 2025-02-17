@@ -1,12 +1,15 @@
 import os
 import openai
 from dotenv import load_dotenv
-from key import get_key as GK
+from key import get_key  # Загружаем API-ключ
+
+api_key = get_key()  # Берём ключ через функцию
+
 class GPTClient:
     def __init__(self):
         """Инициализация API клиента и загрузка ключа"""
         load_dotenv()
-        self.api_key = os.getenv("OPENAI_API_KEY")
+        self.client = openai.OpenAI(api_key=api_key)  # Новый клиент
         self.history = []  # История диалога
         self.system_prompt = (
             "Ты бот-планировщик. Твои задачи:\n"
@@ -14,17 +17,22 @@ class GPTClient:
             "2. Редактировать и удалять задачи.\n"
             "3. Отвечать вежливо и кратко.\n"
             "Формат команд:\n"
-            "- 'ad: купить молоко'.\n"
-            "- 'cr: купить хлеб вместо молока'."
+            "Для записи новой задачи\n "
+            "- ad: дата| задача.\n"
+            "пример: ad: 19.02.2025| поход к врачу\n "
+            "Для перезаписи задачи\n"
+            "- cr: дата| задача.\n"
+            "пример: cr: 19.02.2025| поход в музей\n"
+
         )
         self.first_request = True  # Флаг первого запроса
 
     def chat(self, user_message):
-        """Обрабатывает запрос пользователя и отправляет его в GPT"""
-        if not self.api_key:
+        """Отправляет запрос в GPT и получает ответ"""
+        if not api_key:
             return "❌ Ошибка: API-ключ OpenAI не найден."
 
-        # Добавляем системный промпт только при первом запросе
+        # Добавляем системное сообщение при первом запросе
         if self.first_request:
             self.history.append({"role": "system", "content": self.system_prompt})
             self.first_request = False
@@ -33,16 +41,22 @@ class GPTClient:
         self.history.append({"role": "user", "content": user_message})
 
         try:
-            response = openai.ChatCompletion.create(
-                model="gpt-3.5-turbo",  # Можно заменить на другую модель
+            response = self.client.chat.completions.create(  # Новый синтаксис
+                model="gpt-3.5-turbo",
                 messages=self.history,
                 temperature=0.7
             )
 
-            bot_reply = response["choices"][0]["message"]["content"]
+            bot_reply = response.choices[0].message.content
             self.history.append({"role": "assistant", "content": bot_reply})
 
             return bot_reply
         except Exception as e:
             return f"❌ Ошибка при обращении к GPT: {e}"
 
+
+# client = GPTClient()
+#
+# prom = "в среду в 9 утра к врачу?"
+# response = client.chat(prom)
+# print(response)
