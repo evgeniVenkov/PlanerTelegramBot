@@ -20,11 +20,11 @@ def update_tasks(command):
         df = pd.read_csv(FILE_PATH)  # Загружаем таблицу
 
         # Определяем тип команды (ad - добавить, cr - изменить)
-        if command[3:0].startswith("ad: "):
+        if command.startswith("ad: "):
             date, time, task = command[4:].split("|")
             new_row = pd.DataFrame({"Дата": [date], "Время": [time], "Задача": [task]})
             df = pd.concat([df, new_row], ignore_index=True)
-            message = f"✅ Добавлена новая задача: {date} {time} - {task}"
+            message = f"Добавлена новая задача: {date} {time} - {task}"
 
         elif command.startswith("cr: "):
             date, time, new_task = command[4:].split("|")
@@ -32,10 +32,10 @@ def update_tasks(command):
             message = f"♻️ Задача обновлена: {date} {time} - {new_task}"
 
         else:
-            return "❌ Ошибка: неизвестная команда."
+            return "Ошибка: неизвестная команда."
 
         df.to_csv(FILE_PATH, index=False)  # Сохраняем изменения
         return message
 
     except Exception as e:
-        return f"❌ Ошибка при обновлении задач: {e}"
+        return f"Ошибка при обновлении задач: {e}"
