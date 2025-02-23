@@ -18,7 +18,7 @@ logging.basicConfig(level=logging.INFO)
 bot = Bot(token=TOKEN)
 dp = Dispatcher()
 
-gpt_client = GPTClient()
+
 
 # Команда /start
 @dp.message(Command("start"))
@@ -37,6 +37,7 @@ async def help_handler(message: Message):
 @dp.message()
 async def echo_message(message: Message):
     print(f"📩 Новое сообщение от {message.from_user.first_name}: {message.text}")
+    gpt_client = GPTClient()
     response =  gpt_client.chat(message.text)
 
     await message.answer(f"{response}")
