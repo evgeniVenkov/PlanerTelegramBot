@@ -34,13 +34,21 @@ async def help_handler(message: Message):
                          "/help - Список команд\n"
                          "/add_task - Добавить задачу\n"
                          "/edit_task - Изменить задачу")
+
+
+from datetime import datetime
+
+
 @dp.message()
 async def echo_message(message: Message):
-    print(f"📩 Новое сообщение от {message.from_user.first_name}: {message.text}")
-    gpt_client = GPTClient()
-    response =  gpt_client.chat(message.text)
+    message_time = message.date.strftime("%Y-%m-%d %H:%M:%S")  # нужный формат
+    print(f"📩 Новое сообщение от {message.from_user.username} | время: {message_time} | {message.text} ")
 
-    await message.answer(f"{response}")
+    gpt_client = GPTClient()
+    response = gpt_client.chat(message.text)
+
+    await message.answer(f"Время: {message_time}\nОтвет GPT: {response}")
+
 
 # Запуск бота
 
