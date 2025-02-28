@@ -41,13 +41,17 @@ from datetime import datetime
 
 @dp.message()
 async def echo_message(message: Message):
+
     message_time = message.date.strftime("%Y-%m-%d %H:%M:%S")  # нужный формат
-    print(f"📩 Новое сообщение от {message.from_user.username} | время: {message_time} | {message.text} ")
+    promt = f"{message.from_user.username} | {message_time} | {message.text} "
+
+
+    print(f"📩 Новое сообщение от {promt} ")
 
     gpt_client = GPTClient()
-    response = gpt_client.chat(message.text)
+    response = gpt_client.chat(promt)
 
-    await message.answer(f"Время: {message_time}\nОтвет GPT: {response}")
+    await message.answer(response)
 
 
 # Запуск бота

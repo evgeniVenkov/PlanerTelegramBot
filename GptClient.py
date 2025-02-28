@@ -20,6 +20,8 @@ class GPTClient:
         self.first_request = True  # Флаг первого запроса
 
     def chat(self, user_message):
+        mass = user_message.split(" | ")
+        user, date_time, text = mass
         """Отправляет запрос в GPT и получает ответ"""
         if not api_key:
             return " Ошибка: API-ключ OpenAI не найден."
@@ -30,7 +32,7 @@ class GPTClient:
             self.first_request = False
 
         # Добавляем сообщение пользователя
-        self.history.append({"role": "user", "content": user_message})
+        self.history.append({"role": "user", "content": text})
 
         try:
             response = self.client.chat.completions.create(  # Новый синтаксис
@@ -42,7 +44,9 @@ class GPTClient:
             bot_reply = response.choices[0].message.content
             self.history.append({"role": "assistant", "content": bot_reply})
 
-            if bot_reply.startswith("ad:") or bot_reply.startswith("cr:"):
+            print(f"Ответ гпт: {bot_reply}")
+
+            if bot_reply.startswith("cm:"):
                 bot_reply = Data_base.update_tasks(bot_reply)
 
             return bot_reply
@@ -50,8 +54,9 @@ class GPTClient:
             return f" Ошибка при обращении к GPT: {e}"
 
 
-client = GPTClient()
-
-prom = "что ты умеешь?"
-response = client.chat(prom)
-print(response)
+# client = GPTClient()
+#
+# prom = "Microgboss | 2025-02-28 13:49:25 | в четверг пойти на выставку в три часа"
+#
+# response = client.chat(prom)
+# print(response)

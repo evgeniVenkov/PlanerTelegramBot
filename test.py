@@ -1,7 +1,8 @@
+promt = f" message.from_user.username | время: message_time | message.text"
 
-command = "ad: ДАТА | ВРЕМЯ | ЗАДАЧА"
+print(promt.split(" | ")[0])
 
-if command.startswith("ad:"):
-
-    date, time, task = command[4:].split(" | ")
-    print(date, time, task)
+mass = promt.split(" | ")
+user, date_time, text = mass
+print(mass)
+print(date_time)
