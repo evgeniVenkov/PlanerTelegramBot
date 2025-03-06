@@ -22,9 +22,11 @@ def update_tasks(command):
 
 
         if command.startswith("cm:"):
-            print(True)
+
             user,comm_type,date,time,task = command[4:].split("|")
-            print(date)
+            date = date.strip()
+            time = time.strip()
+            print(f"Comand! \n {date}")
 
 
             if comm_type == "add":

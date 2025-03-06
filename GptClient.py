@@ -20,11 +20,17 @@ class GPTClient:
         self.first_request = True  # Флаг первого запроса
 
     def chat(self, user_message):
+        #хз зачем потом придумаю :)
         mass = user_message.split(" | ")
         user, date_time, text = mass
+
+
         """Отправляет запрос в GPT и получает ответ"""
         if not api_key:
             return " Ошибка: API-ключ OpenAI не найден."
+        if len(self.history) >= 10:
+            self.history = []
+            self.first_request = False
 
         # Добавляем системное сообщение при первом запросе
         if self.first_request:
@@ -32,7 +38,7 @@ class GPTClient:
             self.first_request = False
 
         # Добавляем сообщение пользователя
-        self.history.append({"role": "user", "content": text})
+        self.history.append({"role": "user", "content": user_message})
 
         try:
             response = self.client.chat.completions.create(  # Новый синтаксис

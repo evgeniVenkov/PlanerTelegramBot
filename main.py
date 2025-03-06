@@ -18,7 +18,7 @@ logging.basicConfig(level=logging.INFO)
 bot = Bot(token=TOKEN)
 dp = Dispatcher()
 
-
+gpt_client = GPTClient()
 
 # Команда /start
 @dp.message(Command("start"))
@@ -45,10 +45,8 @@ async def echo_message(message: Message):
     message_time = message.date.strftime("%Y-%m-%d %H:%M:%S")  # нужный формат
     promt = f"{message.from_user.username} | {message_time} | {message.text} "
 
-
     print(f"📩 Новое сообщение от {promt} ")
 
-    gpt_client = GPTClient()
     response = gpt_client.chat(promt)
 
     await message.answer(response)
