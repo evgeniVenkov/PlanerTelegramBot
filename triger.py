@@ -136,20 +136,22 @@ def find_trigger(text, triggers):
         if text_lower.startswith(trigger):
             return trigger
     return None
-def get_result_truger(text):
-
-
+def get_result_truger(
+):
 
     trigger = get_lib_trigger()
+
     for val in trigger.values():
         for target in val:
-            if
+            pass
+
+
+def Pauk(text):
+    pass
 
 
 
-
-
-
-text = "удали задачу"
-trigger = find_trigger(text, delete_triggers)
-print(f"Найденный триггер: {trigger}")  # Выведет: Найденный триггер: удали
+#
+# text = "удали задачу"
+# trigger = find_trigger(text, delete_triggers)
+# print(f"Найденный триггер: {trigger}")  # Выведет: Найденный триггер: удали
