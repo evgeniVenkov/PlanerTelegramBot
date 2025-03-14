@@ -22,16 +22,12 @@ class work():
         else:
             print("Запись отсутствует ❌")
             return None
-
-
-wdf = work()
-
-date_to_check = "2025-03-07"
-time_to_check = "18:30"
-
-
-# Убедимся, что столбцы хранятся как строки (на всякий случай)
-
-
-
-print(type(wdf.check(date_to_check,time_to_check)))
+#
+#
+# wdf = work()
+#
+# date_to_check = "2025-03-07"
+# time_to_check = "18:30"
+#
+#
+# print(type(wdf.check(date_to_check,time_to_check)))

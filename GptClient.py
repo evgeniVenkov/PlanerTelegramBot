@@ -60,6 +60,53 @@ class GPTClient:
             return f" Ошибка при обращении к GPT: {e}"
 
 
+class GPTClient_task:
+    def __init__(self):
+        """Инициализация API клиента и загрузка ключа"""
+        load_dotenv()
+        self.client = openai.OpenAI(api_key=api_key)  # Новый клиент
+        self.history = []  # История диалога
+        self.system_prompt = (promt.get_task_promt())
+        self.first_request = True  # Флаг первого запроса
+
+    def chat(self, user_message):
+        #хз зачем потом придумаю :)
+        # mass = user_message.split(" | ")
+        # text,user, date_time = mass
+
+
+        """Отправляет запрос в GPT и получает ответ"""
+        if not api_key:
+            return " Ошибка: API-ключ OpenAI не найден."
+        if len(self.history) >= 3:
+            self.history = []
+            self.first_request = False
+
+        # Добавляем системное сообщение при первом запросе
+        if self.first_request:
+            self.history.append({"role": "system", "content": self.system_prompt})
+            self.first_request = False
+
+        # Добавляем сообщение пользователя
+        self.history.append({"role": "user", "content": user_message})
+
+        try:
+            response = self.client.chat.completions.create(  # Новый синтаксис
+                model="gpt-3.5-turbo",
+                messages=self.history,
+                temperature=0.7
+            )
+
+            bot_reply = response.choices[0].message.content
+            self.history.append({"role": "assistant", "content": bot_reply})
+
+
+            return bot_reply
+        except Exception as e:
+            return f" Ошибка при обращении к GPT: {e}"
+
+
+
 # client = GPTClient()
 #
 # prom = "Microgboss | 2025-02-28 13:49:25 | в четверг пойти на выставку в три часа"

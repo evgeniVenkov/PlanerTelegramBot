@@ -13,21 +13,26 @@ def Pauk(text):
     triger_lib = get()
     text  = text.split(" ")
     slovo = text[0]
-    count = 0
     for vals in enumerate(triger_lib.values()):
         for val in vals[1]:
             val = val.split(" ")
             if val[0] == slovo:
-                print("Yes!")
-                print(
 
-        print(vals[1])
-        count +=1
-        if count >= 3:
-            break
+                return (vals[0],slovo)
 
+    return None
 
+text = "запиши на завтра в 10 утра позвонить маме|2025-03-14 17:45:00"
 
-text = "запиши на завтра в 10 утра позвонить маме"
+result = Pauk(text)
+from GptClient import GPTClient_task as gpt_task
 
-Pauk(text)
+if result is not None:
+    index = result[0]
+    if index == 0:
+        gpt = gpt_task()
+        response = gpt.chat(text)
+        print(response)
+
+else:
+    print("NONE")

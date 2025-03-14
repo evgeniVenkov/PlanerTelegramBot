@@ -6,6 +6,8 @@ from aiogram.types import Message
 from aiogram.filters import Command
 from dotenv import load_dotenv
 from GptClient import GPTClient
+from triger import Pauk
+
 
 # Загружаем токен из .env
 load_dotenv()
@@ -43,9 +45,13 @@ from datetime import datetime
 async def echo_message(message: Message):
 
     message_time = message.date.strftime("%Y-%m-%d %H:%M:%S")  # нужный формат
-    promt = f"{message.from_user.username} | {message_time} | {message.text} "
+    promt = f"{message.text}|{message.from_user.username}|{message_time}"
 
-    print(f"📩 Новое сообщение от {promt} ")
+    print(f"📩 Новое сообщение {promt} ")
+
+    result_trigger = Pauk(message.text)
+    if result_trigger is not None:
+        pass
 
     response = gpt_client.chat(promt)
 
