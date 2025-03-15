@@ -5,14 +5,14 @@ from GptClient import GPTClient
 from promt import get_task_promt as GP
 
 df = workDF.work()
-FILE_PATH = "tasks.csv"
+FILE_PATH = "Data_base/tasks.csv"
 # Создаём таблицу, если её нет
 if not os.path.exists(FILE_PATH):
     df = pd.DataFrame(columns=["user", "date", "time", "task", "join","status"])
     df.to_csv(FILE_PATH, index=False)
 
 def command(index,mess_text):
-    mess_text = "запиши завтра в 7 к стоматологу|2025-02-27 07:45:24"
+    # mess_text = "запиши завтра в 7 к стоматологу|2025-02-27 07:45:24"
     if index == 0:
         gpt = GPTClient(GP())
         response = gpt.chat(mess_text)

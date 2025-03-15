@@ -3,7 +3,7 @@ import pandas as pd
 class work():
 
     def __init__(self):
-        self.file_path = 'tasks.csv'
+        self.file_path = 'Data_base/tasks.csv'
         try:
             self.df = pd.read_csv(self.file_path)
         except FileNotFoundError:
@@ -45,6 +45,7 @@ class work():
                 df.to_csv(self.file_path, index=False)
 
                 print("Запись добавлена (workDF)")
+                return "Запись добавлена (workDF)"
         except Exception as e:
             print(e)
 

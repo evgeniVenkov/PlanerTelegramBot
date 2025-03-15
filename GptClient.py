@@ -1,9 +1,8 @@
 import os
-from dotenv import load_dotenv
 import openai
 from dotenv import load_dotenv
-import Data_base
-import promt
+
+
 load_dotenv()
 api_key = os.getenv("KEY") # Берём ключ через функцию
 
@@ -13,7 +12,6 @@ api_key = os.getenv("KEY") # Берём ключ через функцию
 class GPTClient:
     def __init__(self,promt,count_history = 3):
         """Инициализация API клиента и загрузка ключа"""
-        load_dotenv()
         self.client = openai.OpenAI(api_key=api_key)  # Новый клиент
         self.history = []  # История диалога
         self.system_prompt = promt

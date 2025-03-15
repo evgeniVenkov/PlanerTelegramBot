@@ -6,7 +6,7 @@ from aiogram.types import Message
 from aiogram.filters import Command
 from dotenv import load_dotenv
 from triger import Pauk
-
+import pandas as pd
 from Data_base import command
 
 # Загружаем токен из .env
@@ -24,7 +24,8 @@ dp = Dispatcher()
 # Команда /start
 @dp.message(Command("start"))
 async def start_handler(message: Message):
-    await message.answer("👋 Привет! Я бот-планировщик. Используй /help, чтобы узнать команды.")
+    await message.answer("👋 Привет! Я бот-планировщик. Используй /help, чтобы узнать команды.\n"
+                         "лучше всего начинать наш диалог с приветствия но можешь и просто написать задачу.")
 # Обработчик команды /start
 
 # Команда /help
@@ -33,8 +34,7 @@ async def help_handler(message: Message):
     await message.answer("📌 Список команд:\n"
                          "/start - Запустить бота\n"
                          "/help - Список команд\n"
-                         "/add_task - Добавить задачу\n"
-                         "/edit_task - Изменить задачу")
+                         )
 
 
 from datetime import datetime
@@ -46,12 +46,14 @@ async def echo_message(message: Message):
     message_time = message.date.strftime("%Y-%m-%d %H:%M:%S")  # нужный формат
     promt = f"{message.text}|{message_time}"
 
-    print(f"📩 Новое сообщение {promt} ")
+    print(f"📩 {promt} ")
 
     result_trigger = Pauk(message.text)
 
     if result_trigger is not None:
         result = command(result_trigger[0],promt)
+        if isinstance(result, pd.DataFrame):
+            result = result.to_string()
 
     else:
         result = "простите ваша команда не распознана"
