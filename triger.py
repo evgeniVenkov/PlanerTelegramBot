@@ -136,8 +136,7 @@ def find_trigger(text, triggers):
         if text_lower.startswith(trigger):
             return trigger
     return None
-def get_result_truger(
-):
+def get_result_truger():
 
     trigger = get_lib_trigger()
 
