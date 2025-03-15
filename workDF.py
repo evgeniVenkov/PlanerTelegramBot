@@ -4,13 +4,9 @@ class work():
 
     def __init__(self):
         self.file_path = 'Data_base/tasks.csv'
-        try:
-            self.df = pd.read_csv(self.file_path)
-        except FileNotFoundError:
-            self.df = pd.DataFrame(columns=["ID", "Name", "Age"])
 
     def check(self,data,time):
-        df = self.df.copy()  # Создаём копию на всякий случай
+        df = pd.read_csv(self.file_path)
 
         # Убеждаемся, что столбцы — это строки без лишних символов
         df["date"] = df["date"].astype(str).str.strip()
@@ -27,9 +23,10 @@ class work():
             print("Запись отсутствует ❌")
             return None
 
-    def add_task(self,response):
+    def add_task(self,response,user_name):
         try:
             # response = "время: 2025-03-15 10:00:00 | задача: Позвонить маме"
+
 
             time, task = response.split(" | ")
             data, time = self.get_time(time)
@@ -38,16 +35,19 @@ class work():
             if free is not None:
                 return free
             else:
-                new_record = {"user": None, "date":data, "time": time,
+                df = pd.read_csv(self.file_path)
+
+                new_record = {"user": user_name, "date":data, "time": time,
                               "task":task[8:],"join":False,"status":False}
 
-                df = pd.concat([self.df, pd.DataFrame([new_record])], ignore_index=True)
+                df = pd.concat([df, pd.DataFrame([new_record])], ignore_index=True)
                 df.to_csv(self.file_path, index=False)
 
                 print("Запись добавлена (workDF)")
                 return "Запись добавлена (workDF)"
         except Exception as e:
             print(e)
+            return e
 
     def get_time(self,d_time):
         # d_time = "время: 2025-03-15 10:00:00"

@@ -51,7 +51,7 @@ async def echo_message(message: Message):
     result_trigger = Pauk(message.text)
 
     if result_trigger is not None:
-        result = command(result_trigger[0],promt)
+        result = command(result_trigger[0],promt,message.from_user.username)
         if isinstance(result, pd.DataFrame):
             result = result.to_string()
 
