@@ -5,9 +5,9 @@ from aiogram import Bot, Dispatcher, types
 from aiogram.types import Message
 from aiogram.filters import Command
 from dotenv import load_dotenv
-from GptClient import GPTClient
 from triger import Pauk
 
+from Data_base import command
 
 # Загружаем токен из .env
 load_dotenv()
@@ -20,7 +20,6 @@ logging.basicConfig(level=logging.INFO)
 bot = Bot(token=TOKEN)
 dp = Dispatcher()
 
-gpt_client = GPTClient()
 
 # Команда /start
 @dp.message(Command("start"))
@@ -45,17 +44,20 @@ from datetime import datetime
 async def echo_message(message: Message):
 
     message_time = message.date.strftime("%Y-%m-%d %H:%M:%S")  # нужный формат
-    promt = f"{message.text}|{message.from_user.username}|{message_time}"
+    promt = f"{message.text}|{message_time}"
 
     print(f"📩 Новое сообщение {promt} ")
 
     result_trigger = Pauk(message.text)
+
     if result_trigger is not None:
-        pass
+        result = command(result_trigger[0],promt)
 
-    response = gpt_client.chat(promt)
+    else:
+        result = "простите ваша команда не распознана"
 
-    await message.answer(response)
+
+    await message.answer(result)
 
 
 # Запуск бота

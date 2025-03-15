@@ -27,18 +27,24 @@ class work():
             print("Запись отсутствует ❌")
             return None
 
-    def add_task(self,data,task):
+    def add_task(self,response):
         try:
+            # response = "время: 2025-03-15 10:00:00 | задача: Позвонить маме"
 
-            data, time = self.get_time(data)
-            print(data)
+            time, task = response.split(" | ")
+            data, time = self.get_time(time)
 
-            new_record = {"user": None, "date":data, "time": time,
-                          "task":task[8:],"join":False,"status":False}
-            df = pd.concat([self.df, pd.DataFrame([new_record])], ignore_index=True)
-            df.to_csv(self.file_path, index=False)
+            free = self.check(data,time)
+            if free is not None:
+                return free
+            else:
+                new_record = {"user": None, "date":data, "time": time,
+                              "task":task[8:],"join":False,"status":False}
 
-            print("Запись добавлена (workDF)")
+                df = pd.concat([self.df, pd.DataFrame([new_record])], ignore_index=True)
+                df.to_csv(self.file_path, index=False)
+
+                print("Запись добавлена (workDF)")
         except Exception as e:
             print(e)
 
@@ -46,8 +52,45 @@ class work():
         # d_time = "время: 2025-03-15 10:00:00"
         d_time = d_time.split(" ")
         return (d_time[1], d_time[2])
-    def print_df(self):
-        self.df.head()
+
+    def update_tasks(self,command):
+        """
+        Обрабатывает команду от GPT и обновляет таблицу.
+        """
+        print(f"comand :{command}")
+
+        try:
+            df = pd.read_csv(self.file_path)  # Загружаем таблицу
+
+            if command.startswith("cm:"):
+
+                user, comm_type, date, time, task = command[4:].split("|")
+                date = date.strip()
+                time = time.strip()
+                print(f"Comand! \n {date}")
+
+                if comm_type == "add":
+                    check = df.check(date, time)
+                    if check is None:
+                        new_row = pd.DataFrame(
+                            {"user": [user], "date": [date], "time": [time], "task": [task], "join": 0, "status": 0})
+                        df = pd.concat([df, new_row], ignore_index=True)
+                        message = f"Добавлена новая задача: {date} {time} - {task}"
+                    else:
+                        message = f"Данное время и дата заняты, перезаписать?"
+
+                elif comm_type == "Update":
+
+                    message = f"♻️ Задача будет обновлена: {task} {time} -"
+
+            else:
+                return "Ошибка: неизвестная команда."
+
+            df.to_csv(self.file_path, index=False)  # Сохраняем изменения
+            return message
+
+        except Exception as e:
+            return f"Ошибка при обновлении задач: {e}"
 # wdf = work()
 #
 # date_to_check = "2025-03-07"

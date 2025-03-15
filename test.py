@@ -25,46 +25,14 @@ def Pauk(text):
     return None
 
 
+# ----------------------------------------------------------------
 from workDF import work
-def chech_time(d_time):
-    d_time = "время: 2025-03-15 10:00:00"
-    date, time = get_time(d_time)
-    df = work()
-    status = df.check(date,time)
-    return status
-def get_time(d_time):
-    # d_time = "время: 2025-03-15 10:00:00"
-    d_time = d_time.split(" ")
-    return (d_time[1],d_time[2])
-
-def add_task(response):
-    response = "время: 2025-03-15 10:00:00 | задача: Позвонить маме"
-
-    time, task = response.split(" | ")
-    check = chech_time(time)
-    if check is None:
-        df = work()
-        df.add_task(time,task)
-        return check
-    else:
-        pass
-
-
-# -----------------------------------------------------------------
-text = "заssaпиaши на завтра в 10 утра позвонить маме|2025-03-14 17:45:00"
+text = "запиши на завтра в 10 утра позвонить маме|2025-03-14 17:45:00"
 result = Pauk(text)
+df = work()
 
 from GptClient import GPTClient_task as gpt_task
-if result is not None:
-    df = work()
-    index = result[0]
-    if index == 0:
-        gpt = gpt_task()
-        response = gpt.chat(text)
-        itog = add_task(response)
 
 
-else:
-    check = add_task(text)
-    print(f"data :{check}")
+
 
