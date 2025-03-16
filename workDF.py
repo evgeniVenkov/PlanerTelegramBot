@@ -4,7 +4,6 @@ class work():
 
     def __init__(self):
         self.file_path = 'Data_base/tasks.csv'
-
     def check(self,data,time):
         df = pd.read_csv(self.file_path)
 
@@ -22,7 +21,6 @@ class work():
         else:
             print("Запись отсутствует ❌")
             return None
-
     def add_task(self,response,user_name):
         try:
             # response = "время: 2025-03-15 10:00:00 | задача: Позвонить маме"
@@ -48,11 +46,11 @@ class work():
         except Exception as e:
             print(e)
             return e
-
     def get_time(self,d_time):
         # d_time = "время: 2025-03-15 10:00:00"
         d_time = d_time.split(" ")
         return (d_time[1], d_time[2])
+
 
     def update_tasks(self,command):
         """

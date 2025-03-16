@@ -8,6 +8,7 @@ from dotenv import load_dotenv
 from triger import Pauk
 import pandas as pd
 from Data_base import command
+from workDF import work
 
 # Загружаем токен из .env
 load_dotenv()
@@ -40,6 +41,9 @@ async def help_handler(message: Message):
 from datetime import datetime
 
 
+
+
+
 @dp.message()
 async def echo_message(message: Message):
 
@@ -53,7 +57,14 @@ async def echo_message(message: Message):
     if result_trigger is not None:
         result = command(result_trigger[0],promt,message.from_user.username)
         if isinstance(result, pd.DataFrame):
-            result = result.to_string()
+            df = work()
+            if result.shape[0] < 2:
+                result = result.squeeze()
+                result = (f"Данная дата: {str(result["date"])}\n "
+                          f"время: {str(result["time"])}\n"
+                          f"заняты задачей: {str(result["task"])}")
+
+
 
     else:
         result = "простите ваша команда не распознана"
