@@ -23,11 +23,11 @@ class work():
             return None
     def add_task(self,response,user_name):
         try:
-            # response = "время: 2025-03-15 10:00:00 | задача: Позвонить маме"
+            # response = "2025-03-21 18:00:00 | Пойти на выставку"
 
 
             time, task = response.split(" | ")
-            data, time = self.get_time(time)
+            data, time = time.split(" ")
 
             free = self.check(data,time)
             if free is not None:
@@ -46,10 +46,6 @@ class work():
         except Exception as e:
             print(e)
             return e
-    def get_time(self,d_time):
-        # d_time = "время: 2025-03-15 10:00:00"
-        d_time = d_time.split(" ")
-        return (d_time[1], d_time[2])
 
 
     def update_tasks(self,command):
@@ -90,10 +86,8 @@ class work():
 
         except Exception as e:
             return f"Ошибка при обновлении задач: {e}"
-# wdf = work()
-#
-# date_to_check = "2025-03-07"
-# time_to_check = "18:30"
+
 #
 #
-# print(type(wdf.check(date_to_check,time_to_check)))
+# work = work()
+# work.add_task("dada","adsdsad")

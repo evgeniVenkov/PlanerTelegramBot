@@ -7,8 +7,9 @@ from aiogram.filters import Command
 from dotenv import load_dotenv
 from triger import Pauk
 import pandas as pd
-from Data_base import command
-from workDF import work
+from Data_base import command_add
+from client import client
+from promt import get_сhat
 
 # Загружаем токен из .env
 load_dotenv()
@@ -41,7 +42,22 @@ async def help_handler(message: Message):
 from datetime import datetime
 
 
+def request_processing(result_trigger, promt, username):
 
+    if result_trigger[0] == 0:
+        result = command_add(promt,username)
+        if isinstance(result, pd.DataFrame):
+
+            if result.shape[0] < 2:
+                result = result.squeeze()
+                result = (f"Данная дата: {str(result["date"])}\n "
+                          f"время: {str(result["time"])}\n"
+                          f"заняты задачей: {str(result["task"])}")
+    else:
+        result =f"(main){result_trigger}"
+        print(result_trigger)
+
+    return result
 
 
 @dp.message()
@@ -55,20 +71,13 @@ async def echo_message(message: Message):
     result_trigger = Pauk(message.text)
 
     if result_trigger is not None:
-        result = command(result_trigger[0],promt,message.from_user.username)
-        if isinstance(result, pd.DataFrame):
-            df = work()
-            if result.shape[0] < 2:
-                result = result.squeeze()
-                result = (f"Данная дата: {str(result["date"])}\n "
-                          f"время: {str(result["time"])}\n"
-                          f"заняты задачей: {str(result["task"])}")
-
+        result = request_processing(result_trigger,promt,message.from_user.username)
 
 
     else:
-        result = "простите ваша команда не распознана"
-
+        print("None")
+        gpt = client(get_сhat())
+        result = gpt.chat(promt)
 
     await message.answer(result)
 

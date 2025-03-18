@@ -9,7 +9,7 @@ api_key = os.getenv("KEY") # Берём ключ через функцию
 
 
 
-class GPTClient:
+class client:
     def __init__(self,promt,count_history = 3):
         """Инициализация API клиента и загрузка ключа"""
         self.client = openai.OpenAI(api_key=api_key)  # Новый клиент
@@ -48,7 +48,7 @@ class GPTClient:
             bot_reply = response.choices[0].message.content
             self.history.append({"role": "assistant", "content": bot_reply})
 
-            print(f"Ответ гпт:(gptckient) {bot_reply}")
+            print(f"Ответ гпт:(ckient) {bot_reply}")
 
             # if bot_reply.startswith("cm:"):
             #     bot_reply = Data_base.update_tasks(bot_reply)

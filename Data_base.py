@@ -1,8 +1,8 @@
 import pandas as pd
 import os
 import workDF
-from GptClient import GPTClient
-from promt import get_task_promt as GP
+from client import client
+from promt import get_task as GP
 
 df = workDF.work()
 FILE_PATH = "Data_base/tasks.csv"
@@ -11,16 +11,12 @@ if not os.path.exists(FILE_PATH):
     df = pd.DataFrame(columns=["user", "date", "time", "task", "join","status"])
     df.to_csv(FILE_PATH, index=False)
 
-def command(index,mess_text,user_name):
+def command_add(mess_text,user_name):
     # mess_text = "запиши завтра в 7 к стоматологу|2025-02-27 07:45:24"
-    if index == 0:
-        gpt = GPTClient(GP())
-        response = gpt.chat(mess_text)
-        itog = df.add_task(response,user_name)
 
-    else:
-        itog = "индекса нет"
-        print(f"{itog}")
+    gpt = client(GP())
+    response = gpt.chat(mess_text)
+    itog = df.add_task(response,user_name)
 
     return itog
 

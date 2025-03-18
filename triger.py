@@ -1,7 +1,7 @@
 def get_lib_trigger():
     # Триггеры для добавления/создания //0
     add_triggers = [
-        "добавь", "создай", "запланируй", "запиши", "назначь", "установи",
+        "Добавь", "добавь", "создай", "запланируй", "запиши", "назначь", "установи",
         "сформируй", "оформи", "присвой", "закрепи", "зарегистрируй", "размести",
         "внеси", "занеси", "обозначь", "помести", "отправь", "включи",
         "зафиксируй", "приставь", "прикрепи", "пометь", "занеси в список",
@@ -125,9 +125,8 @@ def get_lib_trigger():
         "падгатавь напоминанние", "проинфармируй", "уведомление ву", "напомни в нужное времяе"
     ]
 
-    return {"add":add_triggers,"delete":delete_triggers,"reminder":reminder_triggers,
-            "update":update_triggers,"search":search_triggers,"action":action_triggers}
-
+    return {"add": add_triggers, "delete": delete_triggers, "reminder": reminder_triggers,
+            "update": update_triggers, "search": search_triggers, "action": action_triggers}
 
 
 def find_trigger(text, triggers):
@@ -140,16 +139,14 @@ def find_trigger(text, triggers):
 
 def Pauk(text):
     triger_lib = get_lib_trigger()
-    text  = text.split(" ")
+    text = text.split(" ")
     slovo = text[0]
     for vals in enumerate(triger_lib.values()):
         for val in vals[1]:
             val = val.split(" ")
             if val[0] == slovo:
-
-                return (vals[0],slovo)
+                return (vals[0], slovo)
     return None
-
 
 #
 # text = "удали задачу"
