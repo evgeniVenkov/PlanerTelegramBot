@@ -2,7 +2,7 @@ import pandas as pd
 import os
 import workDF
 from client import client
-from promt import get_task as GP
+from promt import get_task, get_search
 
 df = workDF.work()
 FILE_PATH = "Data_base/tasks.csv"
@@ -14,13 +14,18 @@ if not os.path.exists(FILE_PATH):
 def command_add(mess_text,user_name):
     # mess_text = "запиши завтра в 7 к стоматологу|2025-02-27 07:45:24"
 
-    gpt = client(GP())
-    response = gpt.chat(mess_text)
+    gpt_add = client(get_task())
+    response = gpt_add.chat(mess_text)
     itog = df.add_task(response,user_name)
 
     return itog
 
+def command_search(mess_text, username):
+    # mess_text = "покажи задачи на завтра|2025-03-20 07:45:24"
 
+    gpt_search = client(get_search())
+    response = gpt_search.chat(mess_text)
+    itog = df.search_tasks(response, username)
+    return itog
 
-# command(0,"dad")
-# print(update_tasks("cm: Microboss|add| 2025-03-20 | 15:01 | пойти на выставку"))
+# print(command_search(0,"Microgboss"))

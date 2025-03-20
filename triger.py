@@ -139,16 +139,17 @@ def find_trigger(text, triggers):
 
 def Pauk(text):
     triger_lib = get_lib_trigger()
-    text = text.split(" ")
-    slovo = text[0]
-    for vals in enumerate(triger_lib.values()):
-        for val in vals[1]:
+    words = text.split(" ")
+    slovo = words[0] if words else ""
+
+    for key, vals in triger_lib.items():
+        for val in vals:
             val = val.split(" ")
             if val[0] == slovo:
-                return (vals[0], slovo)
+                return (key)
     return None
 
-#
-# text = "удали задачу"
-# trigger = find_trigger(text, delete_triggers)
+
+# text = "покажи задачу"
+# trigger = Pauk(text)
 # print(f"Найденный триггер: {trigger}")  # Выведет: Найденный триггер: удали

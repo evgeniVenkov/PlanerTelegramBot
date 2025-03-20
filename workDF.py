@@ -46,8 +46,6 @@ class work():
         except Exception as e:
             print(e)
             return e
-
-
     def update_tasks(self,command):
         """
         Обрабатывает команду от GPT и обновляет таблицу.
@@ -86,8 +84,46 @@ class work():
 
         except Exception as e:
             return f"Ошибка при обновлении задач: {e}"
+    def search_tasks(self,response,user_name):
+        # response = '2025-03-21 | 13:00:00 13:00:00'
+
+        date, time = response.split(" | ")
+        t_start, t_end = time.split(" ")
+
+        day_time = "00:00:00"
+        day_time = pd.to_datetime(day_time, format="%H:%M:%S").time()
+
+        date = pd.to_datetime(date).date()
+        t_start = pd.to_datetime(t_start, format="%H:%M:%S").time()
+        t_end = pd.to_datetime(t_end, format="%H:%M:%S").time()
+
+        df = pd.read_csv(self.file_path)
+        df = df[df["user"] == user_name]
+
+        df["date"] = pd.to_datetime(df["date"]).dt.date
+        df["time"] = pd.to_datetime(df["time"], format="%H:%M:%S").dt.time
+
+        if t_start == day_time and t_end == day_time:
+            print("day")
+            return df[df["date"] == date]
+
+        elif t_start == t_end:
+            print("hour")
+            task = df[(df['date'] == date) & (df['time'] == t_start)]
+            return task if not task.empty else None
+
+        else:
+            df['datetime'] = df.apply(lambda row: pd.Timestamp.combine(row['date'], row['time']), axis=1)
+
+            filtered_df = df[
+                (df['datetime'].dt.date == date) &
+                (df['datetime'].dt.time >= t_start) &
+                (df['datetime'].dt.time <= t_end)
+                ]
+            del(filtered_df['datetime'])
+            return filtered_df
 
 #
-#
+
 # work = work()
-# work.add_task("dada","adsdsad")
+# print(work.search_tasks("dada","Microgboss"))

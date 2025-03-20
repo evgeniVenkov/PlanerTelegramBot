@@ -7,7 +7,7 @@ from aiogram.filters import Command
 from dotenv import load_dotenv
 from triger import Pauk
 import pandas as pd
-from Data_base import command_add
+from Data_base import command_add,command_search
 from client import client
 from promt import get_сhat
 
@@ -44,17 +44,20 @@ from datetime import datetime
 
 def request_processing(result_trigger, promt, username):
 
-    if result_trigger[0] == 0:
+    if result_trigger == "add":
         result = command_add(promt,username)
         if isinstance(result, pd.DataFrame):
-
+            print(f"((main){result}")
             if result.shape[0] < 2:
                 result = result.squeeze()
                 result = (f"Данная дата: {str(result["date"])}\n "
                           f"время: {str(result["time"])}\n"
                           f"заняты задачей: {str(result["task"])}")
+    elif result_trigger == "search":
+        result = command_search(promt, username)
+        result = result.to_string()
     else:
-        result =f"(main){result_trigger}"
+        result =f"(main)\n{result_trigger}"
         print(result_trigger)
 
     return result
