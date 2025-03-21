@@ -1,9 +1,10 @@
 import os
 import logging
 import asyncio
-from aiogram import Bot, Dispatcher, types
-from aiogram.types import Message
+from aiogram import Bot, Dispatcher,Router, F
+from aiogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery
 from aiogram.filters import Command
+from aiogram.utils.keyboard import InlineKeyboardBuilder
 from dotenv import load_dotenv
 from triger import Pauk
 import pandas as pd
@@ -11,9 +12,12 @@ from Data_base import command_add,command_search
 from client import client
 from promt import get_сhat
 
+
+
 # Загружаем токен из .env
 load_dotenv()
 TOKEN = os.getenv("TOKEN")
+
 
 # Логирование (чтобы видеть ошибки и события)
 logging.basicConfig(level=logging.INFO)
@@ -21,6 +25,25 @@ logging.basicConfig(level=logging.INFO)
 # Создаём бота и диспетчер
 bot = Bot(token=TOKEN)
 dp = Dispatcher()
+router = Router()
+
+
+
+# Обработчик кнопки "Редактировать"
+@router.callback_query(F.data.startswith("edit_"))
+async def edit_task(callback: CallbackQuery):
+    task_name = callback.data.split("_", 1)[1]  # Получаем название задачи
+    await callback.message.answer(f"✏️ Вы выбрали редактирование задачи: {task_name}")
+    await callback.answer()  # Подтверждаем, что запрос был обработан
+
+# Обработчик кнопки "Удалить"
+@router.callback_query(F.data.startswith("delete_"))
+async def delete_task(callback: CallbackQuery):
+    task_name = callback.data.split("_", 1)[1]  # Получаем название задачи
+    await callback.message.delete()  # Удаляем сообщение с задачей
+    await callback.message.answer(f"🗑 Задача '{task_name}' удалена!")
+    await callback.answer()  # Подтверждаем, что запрос был обработан
+
 
 
 # Команда /start
@@ -47,15 +70,12 @@ def request_processing(result_trigger, promt, username):
     if result_trigger == "add":
         result = command_add(promt,username)
         if isinstance(result, pd.DataFrame):
-            print(f"((main){result}")
-            if result.shape[0] < 2:
-                result = result.squeeze()
-                result = (f"Данная дата: {str(result["date"])}\n "
-                          f"время: {str(result["time"])}\n"
-                          f"заняты задачей: {str(result["task"])}")
+            result = result.squeeze()
+            result = (f"Данная дата: {str(result["date"])}\n "
+                      f"время: {str(result["time"])}\n"
+                      f"заняты задачей: {str(result["task"])}")
     elif result_trigger == "search":
         result = command_search(promt, username)
-        result = result.to_string()
     else:
         result =f"(main)\n{result_trigger}"
         print(result_trigger)
@@ -75,14 +95,40 @@ async def echo_message(message: Message):
 
     if result_trigger is not None:
         result = request_processing(result_trigger,promt,message.from_user.username)
+        if isinstance(result, pd.DataFrame):
+            for _, row in result.iterrows():
+                task_name = row["task"]
+                task_time = row["time"]
 
+                # Создаём билдера для клавиатуры
+                builder = InlineKeyboardBuilder()
+
+                # Добавляем кнопки
+                builder.button(
+                    text="✏️ Редактировать",
+                    callback_data=f"edit_{row['task']}"
+                )
+                builder.button(
+                    text="🗑 Удалить",
+                    callback_data=f"delete_{row['task']}"
+                )
+
+                # Создаём InlineKeyboardMarkup из билдера
+                inline_keyboard = builder.as_markup()
+
+                # Отправляем сообщение с кнопками
+                await message.answer(
+                    f"📝 {task_name} ⏰ Время: {task_time}",
+                    reply_markup=inline_keyboard
+                )
 
     else:
         print("None")
         gpt = client(get_сhat())
         result = gpt.chat(promt)
+        await message.answer(result)
 
-    await message.answer(result)
+
 
 
 # Запуск бота
@@ -93,6 +139,8 @@ async def echo_message(message: Message):
 async def main():
     print("✅ Бот запущен и готов к работе!")
     await dp.start_polling(bot)
+
+dp.include_router(router)
 
 if __name__ == "__main__":
     asyncio.run(main())
