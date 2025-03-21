@@ -28,4 +28,7 @@ def command_search(mess_text, username):
     itog = df.search_tasks(response, username)
     return itog
 
+def command_delete(id):
+    df.delete_task(id)
+
 # print(command_search(0,"Microgboss"))

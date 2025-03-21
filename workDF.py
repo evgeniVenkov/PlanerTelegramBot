@@ -1,9 +1,17 @@
 import pandas as pd
 
+
+
+
+
 class work():
 
     def __init__(self):
         self.file_path = 'Data_base/tasks.csv'
+    def __str__(self):
+        return (pd.read_csv(self.file_path)).to_string()
+
+
     def check(self,data,time):
         df = pd.read_csv(self.file_path)
 
@@ -21,6 +29,10 @@ class work():
         else:
             print("Запись отсутствует ❌")
             return None
+    def get_id(self):
+        df = pd.read_csv(self.file_path)
+        last_row = df.iloc[-1]
+        return int(last_row["id"]) + 1
     def add_task(self,response,user_name):
         try:
             # response = "2025-03-21 18:00:00 | Пойти на выставку"
@@ -36,7 +48,7 @@ class work():
                 df = pd.read_csv(self.file_path)
 
                 new_record = {"user": user_name, "date":data, "time": time,
-                              "task":task,"join":False,"status":False}
+                              "task":task,"join":False,"status":False, "id":self.get_id()}
 
                 df = pd.concat([df, pd.DataFrame([new_record])], ignore_index=True)
                 df.to_csv(self.file_path, index=False)
@@ -122,8 +134,12 @@ class work():
                 ]
             del(filtered_df['datetime'])
             return filtered_df
-
+    def delete_task(self,id):
+        df = pd.read_csv(self.file_path)
+        df = df.drop(df[df['id'] == id].index)
+        df.to_csv(self.file_path, index=False)
 #
 
-# work = work()
-# print(work.search_tasks("dada","Microgboss"))
+df = work()
+print(df)
+df.delete_task(4)

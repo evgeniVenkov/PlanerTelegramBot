@@ -8,7 +8,7 @@ from aiogram.utils.keyboard import InlineKeyboardBuilder
 from dotenv import load_dotenv
 from triger import Pauk
 import pandas as pd
-from Data_base import command_add,command_search
+from Data_base import command_add,command_search,command_delete
 from client import client
 from promt import get_сhat
 
@@ -48,7 +48,7 @@ async def delete_task(callback: CallbackQuery):
 async def delete_task(callback: CallbackQuery):
     task_name = callback.data.split("_", 1)[1]  # Получаем название задачи
     await callback.message.delete()  # Удаляем сообщение с задачей
-    await callback.message.answer(f"🗑 Задача '{task_name}' Выполнена!=!")
+    await callback.message.answer(f"👍Задача '{task_name}' Выполнена!=!")
     await callback.answer()  # Подтверждаем, что запрос был обработан
 
 # Команда /start
@@ -106,15 +106,15 @@ async def echo_message(message: Message):
                 # Добавляем кнопки
                 builder.button(
                     text="✏️ Редактировать",
-                    callback_data=f"edit_{row['task']}"
+                    callback_data=f"edit_{row['id']}_{row['task']}"
                 )
                 builder.button(
                     text="🗑 Удалить",
-                    callback_data=f"delete_{row['task']}"
+                    callback_data=f"delete_{row['id']}_{row['task']}"
                 )
                 builder.button(
                     text="👍 выполнена!",
-                    callback_data=f"complite_{row['task']}"
+                    callback_data=f"complite_{row['id']}_{row['task']}"
                 )
 
                 # Создаём InlineKeyboardMarkup из билдера
