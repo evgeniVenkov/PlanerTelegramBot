@@ -36,13 +36,13 @@ class work():
                 df = pd.read_csv(self.file_path)
 
                 new_record = {"user": user_name, "date":data, "time": time,
-                              "task":task[8:],"join":False,"status":False}
+                              "task":task,"join":False,"status":False}
 
                 df = pd.concat([df, pd.DataFrame([new_record])], ignore_index=True)
                 df.to_csv(self.file_path, index=False)
 
                 print("Запись добавлена (workDF)")
-                return "Запись добавлена (workDF)"
+                return f"Задача: {task} добавлена на {data} {time}"
         except Exception as e:
             print(e)
             return e

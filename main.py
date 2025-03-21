@@ -44,7 +44,12 @@ async def delete_task(callback: CallbackQuery):
     await callback.message.answer(f"🗑 Задача '{task_name}' удалена!")
     await callback.answer()  # Подтверждаем, что запрос был обработан
 
-
+@router.callback_query(F.data.startswith("complite_"))
+async def delete_task(callback: CallbackQuery):
+    task_name = callback.data.split("_", 1)[1]  # Получаем название задачи
+    await callback.message.delete()  # Удаляем сообщение с задачей
+    await callback.message.answer(f"🗑 Задача '{task_name}' Выполнена!=!")
+    await callback.answer()  # Подтверждаем, что запрос был обработан
 
 # Команда /start
 @dp.message(Command("start"))
@@ -69,11 +74,6 @@ def request_processing(result_trigger, promt, username):
 
     if result_trigger == "add":
         result = command_add(promt,username)
-        if isinstance(result, pd.DataFrame):
-            result = result.squeeze()
-            result = (f"Данная дата: {str(result["date"])}\n "
-                      f"время: {str(result["time"])}\n"
-                      f"заняты задачей: {str(result["task"])}")
     elif result_trigger == "search":
         result = command_search(promt, username)
     else:
@@ -112,6 +112,10 @@ async def echo_message(message: Message):
                     text="🗑 Удалить",
                     callback_data=f"delete_{row['task']}"
                 )
+                builder.button(
+                    text="👍 выполнена!",
+                    callback_data=f"complite_{row['task']}"
+                )
 
                 # Создаём InlineKeyboardMarkup из билдера
                 inline_keyboard = builder.as_markup()
@@ -121,6 +125,8 @@ async def echo_message(message: Message):
                     f"📝 {task_name} ⏰ Время: {task_time}",
                     reply_markup=inline_keyboard
                 )
+        else:
+            await message.answer(result)
 
     else:
         print("None")
