@@ -30,5 +30,7 @@ def command_search(mess_text, username):
 
 def command_delete(id):
     df.delete_task(id)
+def command_update_id(id, new_task):
+    df.update_task_id(id,new_task)
 
 # print(command_search(0,"Microgboss"))

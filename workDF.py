@@ -1,11 +1,7 @@
 import pandas as pd
 
 
-
-
-
 class work():
-
     def __init__(self):
         self.file_path = 'Data_base/tasks.csv'
     def __str__(self):
@@ -135,11 +131,21 @@ class work():
             del(filtered_df['datetime'])
             return filtered_df
     def delete_task(self,id):
+        id = int(id)
         df = pd.read_csv(self.file_path)
         df = df.drop(df[df['id'] == id].index)
         df.to_csv(self.file_path, index=False)
+    def update_task_id(self,id,new_task):
+        id = int(id)
+        df = pd.read_csv(self.file_path)
+        row = df[df['id']==id]
+        row['task'] = new_task
+        self.delete_task(id)
+        df = pd.read_csv(self.file_path)
+        df = pd.concat([df, row], ignore_index=True)
+        df.to_csv(self.file_path, index=False)
+
 #
 
-df = work()
-print(df)
-df.delete_task(4)
+# df = work()
+# df.update_task_id("3","фцывфывс!")
