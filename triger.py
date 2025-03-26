@@ -138,6 +138,7 @@ def find_trigger(text, triggers):
 
 
 def Pauk(text):
+    # text = "в четверг пойти на выставку в три часа"
     triger_lib = get_lib_trigger()
     words = text.split(" ")
     slovo = words[0] if words else ""
