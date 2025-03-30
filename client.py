@@ -58,11 +58,11 @@ class client:
             return f" Ошибка при обращении к GPT: {e}"
 
 
-sys_prom = get_status_command()
-
-client = client(sys_prom)
-
-prom = "Какие задачи запланированы на эту неделю?"
-
-response = client.chat(prom)
-# print(response)
+# sys_prom = get_status_command()
+#
+# client = client(sys_prom)
+#
+# prom = "какой сегодня день недели?"
+#
+# response = client.chat(prom)
+# # print(response)

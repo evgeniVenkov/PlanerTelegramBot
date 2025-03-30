@@ -12,7 +12,7 @@ from triger import Pauk
 import pandas as pd
 from Data_base import command_add,command_search,command_delete,command_update_id
 from client import client
-from promt import get_сhat
+from promt import get_сhat,get_status_command
 from aiogram.fsm.storage.memory import MemoryStorage
 
 
@@ -97,6 +97,7 @@ async def complite_task(callback: CallbackQuery):
 # Команда /start
 @dp.message(Command("start"))
 async def start_handler(message: Message):
+
     await message.answer("👋 Привет! Я бот-планировщик. Используй /help, чтобы узнать команды.\n"
                          "лучше всего начинать наш диалог с приветствия но можешь и просто написать задачу.")
 # Команда /help
@@ -117,6 +118,26 @@ def request_processing(result_trigger, promt, username):
         print(result_trigger)
 
     return result
+def get_inliner(row):
+    # Создаём билдера для клавиатуры
+    builder = InlineKeyboardBuilder()
+
+    # Добавляем кнопки
+    builder.button(
+        text="✏️ Редактировать",
+        callback_data=f"edit_{row['id']}_{row['task']}"
+    )
+    builder.button(
+        text="🗑 Удалить",
+        callback_data=f"delete_{row['id']}_{row['task']}"
+    )
+    builder.button(
+        text="👍 выполнена!",
+        callback_data=f"complite_{row['id']}_{row['task']}"
+    )
+
+    # Создаём InlineKeyboardMarkup из билдера
+    return builder.as_markup()
 @dp.message()
 async def echo_message(message: Message, state: FSMContext):
     current_state = await state.get_state()
@@ -135,33 +156,13 @@ async def echo_message(message: Message, state: FSMContext):
     if result_trigger is not None:
         result = request_processing(result_trigger,promt,message.from_user.username)
         if isinstance(result, pd.DataFrame):
+
             for _, row in result.iterrows():
-                task_name = row["task"]
-                task_time = row["time"]
 
-                # Создаём билдера для клавиатуры
-                builder = InlineKeyboardBuilder()
-
-                # Добавляем кнопки
-                builder.button(
-                    text="✏️ Редактировать",
-                    callback_data=f"edit_{row['id']}_{row['task']}"
-                )
-                builder.button(
-                    text="🗑 Удалить",
-                    callback_data=f"delete_{row['id']}_{row['task']}"
-                )
-                builder.button(
-                    text="👍 выполнена!",
-                    callback_data=f"complite_{row['id']}_{row['task']}"
-                )
-
-                # Создаём InlineKeyboardMarkup из билдера
-                inline_keyboard = builder.as_markup()
-
+                inline_keyboard = get_inliner(row)
                 # Отправляем сообщение с кнопками
                 await message.answer(
-                    f"📝 {task_name} ⏰ Время: {task_time}",
+                    f"📝 {row['task']} ⏰ Время: {row['time']}",
                     reply_markup=inline_keyboard
                 )
         else:
@@ -169,8 +170,11 @@ async def echo_message(message: Message, state: FSMContext):
 
     else:
         print("None")
-        gpt = client(get_сhat())
+        gpt = client(get_status_command())
         result = gpt.chat(promt)
+        if result == "Нет":
+            gpt = client(get_сhat())
+            result = gpt.chat(promt)
         await message.answer(result)
 
 
