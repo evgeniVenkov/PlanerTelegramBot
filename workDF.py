@@ -113,12 +113,12 @@ class work():
 
         if t_start == day_time and t_end == day_time:
             print("day")
-            return df[df["date"] == date]
+            result =  df[df["date"] == date]
 
         elif t_start == t_end:
             print("hour")
             task = df[(df['date'] == date) & (df['time'] == t_start)]
-            return task if not task.empty else None
+            result = task if not task.empty else None
 
         else:
             df['datetime'] = df.apply(lambda row: pd.Timestamp.combine(row['date'], row['time']), axis=1)
@@ -129,7 +129,12 @@ class work():
                 (df['datetime'].dt.time <= t_end)
                 ]
             del(filtered_df['datetime'])
-            return filtered_df
+            result = filtered_df
+
+
+        if result.empty:
+            result = "Задач в данном диапазоне нет!"
+        return result
     def delete_task(self,id):
         id = int(id)
         df = pd.read_csv(self.file_path)
