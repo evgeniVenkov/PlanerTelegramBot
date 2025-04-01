@@ -26,9 +26,20 @@ class work():
             print("Запись отсутствует ❌")
             return None
     def get_id(self):
-        df = pd.read_csv(self.file_path)
-        last_row = df.iloc[-1]
-        return int(last_row["id"]) + 1
+        df = pd.read_csv("Data_base/counter.csv")
+
+        last_row = df.iloc[-1]  # Последняя строка
+        count = int(last_row["count_id"]) + 1  # Новый count
+
+
+        last_row["count_id"] = count
+
+        # Добавляем новую строку в DataFrame
+        df = pd.concat([df, pd.DataFrame([last_row])], ignore_index=True)
+
+        df.to_csv("Data_base/counter.csv", index=False)
+
+        return count
     def add_task(self,response,user_name):
         try:
             # response = "2025-03-21 18:00:00 | Пойти на выставку"
@@ -151,6 +162,6 @@ class work():
         df.to_csv(self.file_path, index=False)
 
 #
-
+#
 # df = work()
-# df.update_task_id("3","фцывфывс!")
+# print(df.get_id())
