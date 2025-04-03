@@ -16,8 +16,11 @@ def command_add(mess_text,user_name):
 
     gpt_add = client(get_task())
     response = gpt_add.chat(mess_text)
-    itog = df.add_task(response,user_name)
-
+    mess_split = mess_text.split("|")
+    if mess_split == "task":
+        itog = df.add_task(response[5:],user_name)
+    else:
+        itog = df.add_list_item(response,user_name)
     return itog
 
 def command_search(mess_text, username):

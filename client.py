@@ -1,7 +1,8 @@
 import os
 import openai
 from dotenv import load_dotenv
-from promt import get_сhat, get_status_command
+from promt import get_task
+
 
 load_dotenv()
 api_key = os.getenv("KEY") # Берём ключ через функцию
@@ -58,11 +59,13 @@ class client:
             return f" Ошибка при обращении к GPT: {e}"
 
 
-# sys_prom = get_status_command()
-#
-# client = client(sys_prom)
-#
-# prom = "какой сегодня день недели?"
-#
-# response = client.chat(prom)
-# # print(response)
+sys_prom = get_task()
+
+client = client(sys_prom)
+
+prom = "купить картошку рис и сахар, перец|2025-3-3 21:45:00"
+
+response = client.chat(prom)
+split = response.split("|")
+if split[0] == "task":
+    print(response[5:])

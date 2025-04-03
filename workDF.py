@@ -3,19 +3,20 @@ import pandas as pd
 
 class work():
     def __init__(self):
-        self.file_path = 'Data_base/tasks.csv'
+        self.path_tasks = 'Data_base/tasks.csv'
+        self.path_list = 'Data_base/lists.csv'
+        self.path_counter = 'Data_base/counter.csv'
     def __str__(self):
-        return (pd.read_csv(self.file_path)).to_string()
+        return (pd.read_csv(self.path_tasks)).to_string()
 
 
     def check(self,data,time):
-        df = pd.read_csv(self.file_path)
+        df = pd.read_csv(self.path_tasks)
 
-        # Убеждаемся, что столбцы — это строки без лишних символов
         df["date"] = df["date"].astype(str).str.strip()
         df["time"] = df["time"].astype(str).str.strip()
 
-        data = str(data).strip()  # Приводим входные параметры к строке
+        data = str(data).strip()
         time = str(time).strip()
 
         exists = ((df["date"] == data) & (df["time"] == time)).any()
@@ -26,24 +27,19 @@ class work():
             print("Запись отсутствует ❌")
             return None
     def get_id(self):
-        df = pd.read_csv("Data_base/counter.csv")
+        df = pd.read_csv(self.path_counter)
 
-        last_row = df.iloc[-1]  # Последняя строка
-        count = int(last_row["count_id"]) + 1  # Новый count
-
-
+        last_row = df.iloc[-1]
+        count = int(last_row["count_id"]) + 1
         last_row["count_id"] = count
 
-        # Добавляем новую строку в DataFrame
         df = pd.concat([df, pd.DataFrame([last_row])], ignore_index=True)
-
-        df.to_csv("Data_base/counter.csv", index=False)
+        df.to_csv(self.path_counter, index=False)
 
         return count
     def add_task(self,response,user_name):
         try:
             # response = "2025-03-21 18:00:00 | Пойти на выставку"
-
 
             time, task = response.split(" | ")
             data, time = time.split(" ")
@@ -52,13 +48,13 @@ class work():
             if free is not None:
                 return free
             else:
-                df = pd.read_csv(self.file_path)
+                df = pd.read_csv(self.path_tasks)
 
                 new_record = {"user": user_name, "date":data, "time": time,
                               "task":task,"join":False,"status":False, "id":self.get_id()}
 
                 df = pd.concat([df, pd.DataFrame([new_record])], ignore_index=True)
-                df.to_csv(self.file_path, index=False)
+                df.to_csv(self.path_tasks, index=False)
 
                 print("Запись добавлена (workDF)")
                 return f"Задача: {task} добавлена на {data} {time}"
@@ -72,7 +68,7 @@ class work():
         print(f"comand :{command}")
 
         try:
-            df = pd.read_csv(self.file_path)  # Загружаем таблицу
+            df = pd.read_csv(self.path_tasks)  # Загружаем таблицу
 
             if command.startswith("cm:"):
 
@@ -98,7 +94,7 @@ class work():
             else:
                 return "Ошибка: неизвестная команда."
 
-            df.to_csv(self.file_path, index=False)  # Сохраняем изменения
+            df.to_csv(self.path_tasks, index=False)  # Сохраняем изменения
             return message
 
         except Exception as e:
@@ -116,7 +112,7 @@ class work():
         t_start = pd.to_datetime(t_start, format="%H:%M:%S").time()
         t_end = pd.to_datetime(t_end, format="%H:%M:%S").time()
 
-        df = pd.read_csv(self.file_path)
+        df = pd.read_csv(self.path_tasks)
         df = df[df["user"] == user_name]
 
         df["date"] = pd.to_datetime(df["date"]).dt.date
@@ -148,20 +144,33 @@ class work():
         return result
     def delete_task(self,id):
         id = int(id)
-        df = pd.read_csv(self.file_path)
+        df = pd.read_csv(self.path_tasks)
         df = df.drop(df[df['id'] == id].index)
-        df.to_csv(self.file_path, index=False)
+        df.to_csv(self.path_tasks, index=False)
     def update_task_id(self,id,new_task):
         id = int(id)
-        df = pd.read_csv(self.file_path)
+        df = pd.read_csv(self.path_tasks)
         row = df[df['id']==id]
         row['task'] = new_task
         self.delete_task(id)
-        df = pd.read_csv(self.file_path)
+        df = pd.read_csv(self.path_tasks)
         df = pd.concat([df, row], ignore_index=True)
-        df.to_csv(self.file_path, index=False)
+        df.to_csv(self.path_tasks, index=False)
+    def add_list_item(self,response,user_name):
+        df = pd.read_csv(self.path_list)
 
-#
-#
-# df = work()
-# print(df.get_id())
+        response =  "продуктовый магазин| Картошка, ker"
+        name_list, values = response.split("|")
+        val = values[1].split(",")
+        if len(val) > 1:
+            for i in val:
+                print(i)
+        else:
+            row = {"user_name":0,"name_list":name_list,"record":,"status":,"join":}
+
+
+        df = pd.read_csv(self.path_list)
+
+
+df = work()
+print(df.add_list_item("ads", "Evgen"))
