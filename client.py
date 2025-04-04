@@ -1,7 +1,7 @@
 import os
 import openai
 from dotenv import load_dotenv
-from promt import get_task
+from promt import get_search
 
 
 load_dotenv()
@@ -57,13 +57,12 @@ class client:
             return f" Ошибка при обращении к GPT: {e}"
 
 
-# sys_prom = get_task()
-#
-# client = client(sys_prom)
-#
-# prom = "купить картошку рис и сахар, перец|2025-3-3 21:45:00"
-#
-# response = client.chat(prom)
-# split = response.split("|")
-# if split[0] == "task":
-#     print(response[5:])
+sys_prom = get_search()
+
+client = client(sys_prom)
+
+prom = "покажи задачи на следующий понедельник |2025-04-15 10:23:31"
+
+response = client.chat(prom)
+
+

@@ -4,5 +4,8 @@ name_list = "name_list"
 record = "record"
 
 
+list_list = ['продуктовый магазин','строительный магазин','мечты','цели на месяц']
 
-row = {"user_name":0,"name_list":name_list,"record":record,"status":0,"join":0}
+list_list = list_list
+
+print()
