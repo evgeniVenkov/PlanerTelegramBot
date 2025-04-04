@@ -8,8 +8,6 @@ load_dotenv()
 api_key = os.getenv("KEY") # Берём ключ через функцию
 
 
-
-
 class client:
     def __init__(self,promt,count_history = 3):
         """Инициализация API клиента и загрузка ключа"""
@@ -59,13 +57,13 @@ class client:
             return f" Ошибка при обращении к GPT: {e}"
 
 
-sys_prom = get_task()
-
-client = client(sys_prom)
-
-prom = "купить картошку рис и сахар, перец|2025-3-3 21:45:00"
-
-response = client.chat(prom)
-split = response.split("|")
-if split[0] == "task":
-    print(response[5:])
+# sys_prom = get_task()
+#
+# client = client(sys_prom)
+#
+# prom = "купить картошку рис и сахар, перец|2025-3-3 21:45:00"
+#
+# response = client.chat(prom)
+# split = response.split("|")
+# if split[0] == "task":
+#     print(response[5:])

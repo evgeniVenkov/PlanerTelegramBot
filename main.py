@@ -10,7 +10,7 @@ from aiogram.fsm.state import State, StatesGroup
 from dotenv import load_dotenv
 from triger import Pauk
 import pandas as pd
-from Data_base import get_task,command_search,command_delete,command_update_id
+from Data_base import command_add,command_search,command_delete,command_update_id
 from client import client
 from promt import get_сhat,get_status_command
 from aiogram.fsm.storage.memory import MemoryStorage
@@ -109,7 +109,7 @@ async def help_handler(message: Message):
 def request_processing(result_trigger, promt, username):
 
     if result_trigger == "add":
-        result = get_task(promt, username)
+        result = command_add(promt, username)
     elif result_trigger == "search":
         result = command_search(promt, username)
     else:

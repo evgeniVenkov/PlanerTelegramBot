@@ -158,8 +158,8 @@ class work():
         df.to_csv(self.path_tasks, index=False)
     def add_list_item(self,response,user_name):
         df = pd.read_csv(self.path_list)
+        # response ="продуктовый магазин|Картошка, марковка"
 
-        response =  "продуктовый магазин| Картошка, марковка"
         name_list, values = response.split("|")
         val = values.split(",")
         if len(val) > 1:
@@ -168,8 +168,10 @@ class work():
                 i = i.strip()
                 row = {"user_name": user_name, "name_list": name_list, "record": i, "status": 0, "join": 0}
                 mass.append(row)
+
             new_df = pd.DataFrame(mass)
             df = pd.concat([df, new_df], ignore_index=True)
+
 
         else:
             row = {"user_name": user_name, "name_list": name_list, "record": val[0].strip(), "status": 0, "join": 0}
@@ -178,6 +180,8 @@ class work():
 
         df.to_csv(self.path_list, index=False)
 
+        return f"{values}.\nДобавлены в: {name_list}"
 
-df = work()
-print(df.add_list_item("ads", "Evgen"))
+
+# df = work()
+# print(df.add_list_item("ads", "Evgen"))
