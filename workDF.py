@@ -159,17 +159,24 @@ class work():
     def add_list_item(self,response,user_name):
         df = pd.read_csv(self.path_list)
 
-        response =  "продуктовый магазин| Картошка, ker"
+        response =  "продуктовый магазин| Картошка, марковка"
         name_list, values = response.split("|")
-        val = values[1].split(",")
+        val = values.split(",")
         if len(val) > 1:
+            mass = []
             for i in val:
-                print(i)
+                i = i.strip()
+                row = {"user_name": user_name, "name_list": name_list, "record": i, "status": 0, "join": 0}
+                mass.append(row)
+            new_df = pd.DataFrame(mass)
+            df = pd.concat([df, new_df], ignore_index=True)
+
         else:
-            row = {"user_name":0,"name_list":name_list,"record":,"status":,"join":}
+            row = {"user_name": user_name, "name_list": name_list, "record": val[0].strip(), "status": 0, "join": 0}
+            row = pd.DataFrame([row])
+            df = pd.concat([df, row], ignore_index=True)
 
-
-        df = pd.read_csv(self.path_list)
+        df.to_csv(self.path_list, index=False)
 
 
 df = work()
