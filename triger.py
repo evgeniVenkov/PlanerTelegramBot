@@ -139,6 +139,7 @@ def find_trigger(text, triggers):
 
 def Pauk(text):
     # text = "в четверг пойти на выставку в три часа"
+    text = text.lower()
     triger_lib = get_lib_trigger()
     words = text.split(" ")
     slovo = words[0] if words else ""
@@ -151,6 +152,6 @@ def Pauk(text):
     return None
 
 
-# text = "покажи задачу"
-# trigger = Pauk(text)
-# print(f"Найденный триггер: {trigger}")  # Выведет: Найденный триггер: удали
+text = "Покажи задачу"
+trigger = Pauk(text)
+print(f"Найденный триггер: {trigger}")  # Выведет: Найденный триггер: удали
