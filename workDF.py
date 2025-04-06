@@ -39,9 +39,9 @@ class work():
         return count
     def add_task(self,response,user_name):
         try:
-            # response = "2025-03-21 18:00:00 | Пойти на выставку"
+            # response = "2025-04-07 13:00:00|На концерт"
 
-            time, task = response.split(" | ")
+            time, task = response.split("|")
             data, time = time.split(" ")
 
             free = self.check(data,time)
@@ -157,9 +157,9 @@ class work():
         df = pd.concat([df, row], ignore_index=True)
         df.to_csv(self.path_tasks, index=False)
     def add_list_item(self,response,user_name):
-        df = pd.read_csv(self.path_list)
-        response ="продуктовый магазин|Картошка, марковка"
+        # response ="продуктовый магазин|Картошка, марковка"
 
+        df = pd.read_csv(self.path_list)
         name_list, values = response.split("|")
         val = values.split(",")
         if len(val) > 1:
@@ -194,5 +194,5 @@ class work():
 
 #
 #
-df = work()
-print(df.add_list_item("ads", "Microgboss"))
+# df = work()
+# print(df.add_task("ads", "Microgboss"))

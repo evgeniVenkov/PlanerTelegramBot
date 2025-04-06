@@ -151,7 +151,7 @@ def Pauk(text):
                 return (key)
     return None
 
-
-text = "Покажи задачу"
-trigger = Pauk(text)
-print(f"Найденный триггер: {trigger}")  # Выведет: Найденный триггер: удали
+#
+# text = "Покажи задачу"
+# trigger = Pauk(text)
+# print(f"Найденный триггер: {trigger}")  # Выведет: Найденный триггер: удали

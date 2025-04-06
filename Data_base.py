@@ -16,10 +16,13 @@ def command_add(mess_text,user_name):
 
     gpt_add = client(get_task())
     response = gpt_add.chat(mess_text)
-    mess_split = mess_text.split("|")
+    mess_split = response.split("|")
     if mess_split[0] == "task":
+        print(response[5:])
         itog = df.add_task(response[5:],user_name)
+
     else:
+        print(mess_split[0])
         itog = df.add_list_item(response,user_name)
     return itog
 
@@ -43,5 +46,5 @@ def command_delete(id):
 def command_update_id(id, new_task):
     df.update_task_id(id,new_task)
 #
-#
-# print(command_search(0,"Microgboss"))
+# #
+# print(command_add(0,"Microgboss"))
