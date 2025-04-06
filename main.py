@@ -110,9 +110,11 @@ def request_processing(result_trigger, promt, username):
 
     if result_trigger == "add":
         result = command_add(promt, username)
+        tip = "add"
     elif result_trigger == "search":
         result, tip = command_search(promt, username)
     else:
+        tip = "error"
         result =f"(main)\n{result_trigger}"
         print(result)
 
@@ -153,6 +155,7 @@ async def echo_message(message: Message, state: FSMContext):
     result_trigger = Pauk(message.text)
 
     if result_trigger is not None:
+
         result, tip = request_processing(result_trigger,promt,message.from_user.username)
 
         if tip == "list":
@@ -160,8 +163,6 @@ async def echo_message(message: Message, state: FSMContext):
 
                 for num, i in enumerate(result['record']):
                     await message.answer(f"{num}: {i}")
-
-
 
 
         elif isinstance(result, pd.DataFrame):
