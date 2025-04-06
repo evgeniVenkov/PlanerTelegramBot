@@ -158,7 +158,7 @@ class work():
         df.to_csv(self.path_tasks, index=False)
     def add_list_item(self,response,user_name):
         df = pd.read_csv(self.path_list)
-        # response ="продуктовый магазин|Картошка, марковка"
+        response ="продуктовый магазин|Картошка, марковка"
 
         name_list, values = response.split("|")
         val = values.split(",")
@@ -166,7 +166,7 @@ class work():
             mass = []
             for i in val:
                 i = i.strip()
-                row = {"user_name": user_name, "name_list": name_list, "record": i, "status": 0, "join": 0}
+                row = {"id":self.get_id(),"user_name": user_name, "name_list": name_list, "record": i, "status": 0, "join": 0}
                 mass.append(row)
 
             new_df = pd.DataFrame(mass)
@@ -194,5 +194,5 @@ class work():
 
 #
 #
-# df = work()
-# print(df.search_list("ads", "Evgen"))
+df = work()
+print(df.add_list_item("ads", "Microgboss"))
