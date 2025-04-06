@@ -8,4 +8,9 @@ list_list = ['продуктовый магазин','строительный �
 
 list_list = list_list
 
-print()
+df = pd.read_csv("Data_base/lists.csv")
+
+
+#
+# print(df)
+

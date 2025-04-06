@@ -56,13 +56,13 @@ class client:
         except Exception as e:
             return f" Ошибка при обращении к GPT: {e}"
 
-
-sys_prom = get_search()
-
-client = client(sys_prom)
-
-prom = "покажи задачи на следующий понедельник |2025-04-15 10:23:31"
-
-response = client.chat(prom)
-
+#
+# sys_prom = get_search()
+#
+# client = client(sys_prom)
+#
+# prom = "список покупок|2025-04-15 10:23:31"
+#
+# response = client.chat(prom)
+#
 

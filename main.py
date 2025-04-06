@@ -111,12 +111,12 @@ def request_processing(result_trigger, promt, username):
     if result_trigger == "add":
         result = command_add(promt, username)
     elif result_trigger == "search":
-        result = command_search(promt, username)
+        result, tip = command_search(promt, username)
     else:
         result =f"(main)\n{result_trigger}"
-        print(result_trigger)
+        print(result)
 
-    return result
+    return result,tip
 def get_inliner(row):
     # Создаём билдера для клавиатуры
     builder = InlineKeyboardBuilder()
@@ -153,8 +153,18 @@ async def echo_message(message: Message, state: FSMContext):
     result_trigger = Pauk(message.text)
 
     if result_trigger is not None:
-        result = request_processing(result_trigger,promt,message.from_user.username)
-        if isinstance(result, pd.DataFrame):
+        result, tip = request_processing(result_trigger,promt,message.from_user.username)
+
+        if tip == "list":
+            if isinstance(result, pd.DataFrame):
+
+                for num, i in enumerate(result['record']):
+                    await message.answer(f"{num}: {i}")
+
+
+
+
+        elif isinstance(result, pd.DataFrame):
 
             for _, row in result.iterrows():
 
@@ -176,12 +186,6 @@ async def echo_message(message: Message, state: FSMContext):
             result = gpt.chat(promt)
         await message.answer(result)
 
-
-# Запуск бота
-
-# Обработчик всех текстовых сообщений
-
-# Запуск бота
 async def main():
     print("✅ Бот запущен и готов к работе!")
     await dp.start_polling(bot)

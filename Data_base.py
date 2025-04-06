@@ -23,17 +23,25 @@ def command_add(mess_text,user_name):
         itog = df.add_list_item(response,user_name)
     return itog
 
-def command_search(mess_text, username):
-    # mess_text = "покажи задачи на завтра|2025-03-20 07:45:24"
+def command_search(mess_text, user_name):
+    # mess_text = "покажи список покупок|2025-03-20 07:45:24"
+    # user_name = "Evgen"
 
     gpt_search = client(get_search())
     response = gpt_search.chat(mess_text)
-    itog = df.search_tasks(response, username)
-    return itog
+    split = response.split("|")
+    if split[0] == "list":
+        itog = df.search_list(user_name, split[1])
+        tip = "list"
+    else:
+        itog = df.search_tasks(response, user_name)
+        tip = "task"
+    return itog, tip
 
 def command_delete(id):
     df.delete_task(id)
 def command_update_id(id, new_task):
     df.update_task_id(id,new_task)
-
+#
+#
 # print(command_search(0,"Microgboss"))

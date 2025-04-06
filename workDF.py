@@ -182,6 +182,17 @@ class work():
 
         return f"{values}.\nДобавлены в: {name_list}"
 
+    def search_list(self,user_name, list_name):
+        # user_name = "Evgen"
+        # list_name = "продуктовый магазин"
 
+        df = pd.read_csv(self.path_list)
+        df = df[df["name_list"]==list_name]
+        df = df[(df['user_name']==user_name) | (df['join']==user_name)]
+        return df
+
+
+#
+#
 # df = work()
-# print(df.add_list_item("ads", "Evgen"))
+# print(df.search_list("ads", "Evgen"))
