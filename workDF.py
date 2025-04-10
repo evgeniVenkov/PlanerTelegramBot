@@ -158,16 +158,20 @@ class work():
         df = pd.concat([df, row], ignore_index=True)
         df.to_csv(self.path_tasks, index=False)
     def add_list_item(self,response,user_name):
-        # response ="продуктовый магазин|Картошка, марковка"
+        response ="электроника|лампочка, провод"
 
         df = pd.read_csv(self.path_list)
         name_list, values = response.split("|")
         val = values.split(",")
+        l_join = " ".join(self.get_list_join(user_name, name_list))
+        print(l_join)
         if len(val) > 1:
             mass = []
             for i in val:
                 i = i.strip()
-                row = {"id":self.get_id(),"user_name": user_name, "name_list": name_list, "record": i, "status": 0,"join":0}
+
+                # print(l_join)
+                row = {"id":self.get_id(),"user_name": user_name, "name_list": name_list, "record": i, "status": 0,"join":l_join}
                 mass.append(row)
 
             new_df = pd.DataFrame(mass)
@@ -175,7 +179,7 @@ class work():
 
 
         else:
-            row = {"user_name": user_name, "name_list": name_list, "record": val[0].strip(), "status": 0, "join": 0}
+            row = {"user_name": user_name, "name_list": name_list, "record": val[0].strip(), "status": 0, "join":l_join}
             row = pd.DataFrame([row])
             df = pd.concat([df, row], ignore_index=True)
 
@@ -190,7 +194,8 @@ class work():
         df = df[df["name_list"]==list_name]
         df = df[(df['user_name']==user_name) | (df['join']==user_name)]
         return df
-    def get_list_join(self,user_name, name_list):
+
+    def get_list_join(self, user_name: str, name_list: str) -> list[str]:
         df = pd.read_csv(self.path_list_join)
         result = df[(df["user_name"] == user_name) & (df["name_list"] == name_list)]
         if result.empty:
@@ -203,4 +208,4 @@ class work():
 #
 # #
 df = work()
-print(df.get_list_join("Evgen", "электроника"))
+print(df.search_list("Evgen", "Evgen"))
