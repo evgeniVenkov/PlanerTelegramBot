@@ -6,6 +6,7 @@ class work():
         self.path_tasks = 'Data_base/tasks.csv'
         self.path_list = 'Data_base/lists.csv'
         self.path_counter = 'Data_base/counter.csv'
+        self.path_list_join = 'Data_base/list_join.csv'
     def __str__(self):
         return (pd.read_csv(self.path_tasks)).to_string()
 
@@ -166,7 +167,7 @@ class work():
             mass = []
             for i in val:
                 i = i.strip()
-                row = {"id":self.get_id(),"user_name": user_name, "name_list": name_list, "record": i, "status": 0, "join": 0}
+                row = {"id":self.get_id(),"user_name": user_name, "name_list": name_list, "record": i, "status": 0,"join":0}
                 mass.append(row)
 
             new_df = pd.DataFrame(mass)
@@ -181,7 +182,6 @@ class work():
         df.to_csv(self.path_list, index=False)
 
         return f"{values}.\nДобавлены в: {name_list}"
-
     def search_list(self,user_name, list_name):
         # user_name = "Evgen"
         # list_name = "продуктовый магазин"
@@ -190,9 +190,17 @@ class work():
         df = df[df["name_list"]==list_name]
         df = df[(df['user_name']==user_name) | (df['join']==user_name)]
         return df
+    def get_list_join(self,user_name, name_list):
+        df = pd.read_csv(self.path_list_join)
+        result = df[(df["user_name"] == user_name) & (df["name_list"] == name_list)]
+        if result.empty:
+            return f"ошибка в поиске {name_list} {user_name}"
+        result = result["list_join"].item()
+        split = str(result).split(" ")
+        return split
 
 
 #
-#
-# df = work()
-# print(df.add_task("ads", "Microgboss"))
+# #
+df = work()
+print(df.get_list_join("Evgen", "электроника"))
