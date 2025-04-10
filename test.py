@@ -14,17 +14,10 @@ def create_df():
     df.to_csv("Data_base/list_join.csv")
     #
 # print(df)
-
-def list_join(user_name: str, name_list:str) -> list[str]:
-
-    df = pd.read_csv("Data_base/list_join.csv")
-    result = df[(df["user_name"] == user_name) & (df["name_list"] == name_list)]
-    if result.empty:
-        return f"ошибка в поиске {name_list} {user_name}"
-    result = result["list_join"].item()
-    split = str(result).split(" ")
-    return split
-
+def search_list(user_name: str, list_name: str):
+    df = pd.read_csv(self.path_list)
+    df = df[df["name_list"]==list_name]
+    df = df[(df['user_name']==user_name) | (df['join']==user_name)]
 
 
 mass = list_join("Evgen","электроника")

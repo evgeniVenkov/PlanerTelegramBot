@@ -171,7 +171,7 @@ class work():
                 i = i.strip()
 
                 # print(l_join)
-                row = {"id":self.get_id(),"user_name": user_name, "name_list": name_list, "record": i, "status": 0,"join":l_join}
+                row = {"id":self.get_id(),"user_name": user_name, "list_name": name_list, "record": i, "status": 0,"join":l_join}
                 mass.append(row)
 
             new_df = pd.DataFrame(mass)
@@ -179,19 +179,39 @@ class work():
 
 
         else:
-            row = {"user_name": user_name, "name_list": name_list, "record": val[0].strip(), "status": 0, "join":l_join}
+            row = {"user_name": user_name, "list_name": name_list, "record": val[0].strip(), "status": 0, "join":l_join}
             row = pd.DataFrame([row])
             df = pd.concat([df, row], ignore_index=True)
 
         df.to_csv(self.path_list, index=False)
 
         return f"{values}.\nДобавлены в: {name_list}"
-    def search_list(self,user_name, list_name):
+    def search_list(self,user_name: str, list_name: str) -> pd.DataFrame:
         # user_name = "Evgen"
         # list_name = "продуктовый магазин"
 
         df = pd.read_csv(self.path_list)
-        df = df[df["name_list"]==list_name]
+        user_df = df[df["user_name"]==user_name]
+        if user_df.empty:
+
+            if (df["list_name"] == list_name).any():
+
+
+        else:
+            if (user_df["list_name"] == list_name).any():
+                result = user_df[user_df["list_name"] == list_name]
+
+            else:
+                result = f"У пользователя {user_name} нет списка {list_name}"
+
+        print(result)
+        l_join = self.get_list_join(user_name, list_name)
+        exit()
+
+        for user in l_join:
+            if user == user_name:
+                pass
+
         df = df[(df['user_name']==user_name) | (df['join']==user_name)]
         return df
 
@@ -208,4 +228,4 @@ class work():
 #
 # #
 df = work()
-print(df.search_list("Evgen", "Evgen"))
+print(df.search_list("Dasha", "электроника"))
