@@ -112,6 +112,7 @@ def request_processing(result_trigger, promt, username):
         result = command_add(promt, username)
         tip = "add"
     elif result_trigger == "search":
+        print(f"tip: search")
         result, tip = command_search(promt, username)
     else:
         tip = "error"
@@ -160,7 +161,6 @@ async def echo_message(message: Message, state: FSMContext):
 
         if tip == "list":
             if isinstance(result, pd.DataFrame):
-
                 for num, i in enumerate(result['record']):
                     await message.answer(f"{num}: {i}")
 

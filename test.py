@@ -1,16 +1,7 @@
-from typing import Tuple, Any
-
 import pandas as pd
 
-df = pd.read_csv("./Data_base/lists.csv")
 
-
-def chek_list():
-    pass
-
-
-# Метод для проверки доступа
-def check_access(user_name: str, list_name: str) -> str | tuple[int, str]:
+def check_list(user_name: str, list_name: str) -> str | tuple[int, str]:
     df = pd.read_csv("./Data_base/users.csv")
 
     if user_name not in df["nik_tg"].values:
@@ -28,9 +19,14 @@ def check_access(user_name: str, list_name: str) -> str | tuple[int, str]:
     return "У вас нет данного списка, добавить?"
 
 
+def print_list(list_id: int) -> pd.DataFrame:
+    df = pd.read_csv("./Data_base/lists.csv")
+    df = df[df["list_id"] == list_id]
+    return df
+
+
 # Пример использования
 user_name = "Evgen"
 list_name = "электроника"
 
-result = check_access(user_name, list_name)
-print(result)
+print(id)

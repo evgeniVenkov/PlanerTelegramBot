@@ -1,4 +1,5 @@
 import pandas as pd
+from pandas import DataFrame
 
 
 class work():
@@ -7,11 +8,12 @@ class work():
         self.path_list = 'Data_base/lists.csv'
         self.path_counter = 'Data_base/counter.csv'
         self.path_list_join = 'Data_base/list_join.csv'
+        self.path_users = 'Data_base/users.csv'
+
     def __str__(self):
         return (pd.read_csv(self.path_tasks)).to_string()
 
-
-    def check(self,data,time):
+    def check(self, data, time):
         df = pd.read_csv(self.path_tasks)
 
         df["date"] = df["date"].astype(str).str.strip()
@@ -27,6 +29,7 @@ class work():
         else:
             print("Запись отсутствует ❌")
             return None
+
     def get_id(self):
         df = pd.read_csv(self.path_counter)
 
@@ -38,21 +41,22 @@ class work():
         df.to_csv(self.path_counter, index=False)
 
         return count
-    def add_task(self,response,user_name):
+
+    def add_task(self, response, user_name):
         try:
             # response = "2025-04-07 13:00:00|На концерт"
 
             time, task = response.split("|")
             data, time = time.split(" ")
 
-            free = self.check(data,time)
+            free = self.check(data, time)
             if free is not None:
                 return free
             else:
                 df = pd.read_csv(self.path_tasks)
 
-                new_record = {"user": user_name, "date":data, "time": time,
-                              "task":task,"join":False,"status":False, "id":self.get_id()}
+                new_record = {"user": user_name, "date": data, "time": time,
+                              "task": task, "join": False, "status": False, "id": self.get_id()}
 
                 df = pd.concat([df, pd.DataFrame([new_record])], ignore_index=True)
                 df.to_csv(self.path_tasks, index=False)
@@ -62,7 +66,8 @@ class work():
         except Exception as e:
             print(e)
             return e
-    def update_tasks(self,command):
+
+    def update_tasks(self, command):
         """
         Обрабатывает команду от GPT и обновляет таблицу.
         """
@@ -100,7 +105,8 @@ class work():
 
         except Exception as e:
             return f"Ошибка при обновлении задач: {e}"
-    def search_tasks(self,response,user_name):
+
+    def search_tasks(self, response, user_name):
         # response = '2025-03-21 | 13:00:00 13:00:00'
 
         date, time = response.split(" | ")
@@ -121,7 +127,7 @@ class work():
 
         if t_start == day_time and t_end == day_time:
             print("day")
-            result =  df[df["date"] == date]
+            result = df[df["date"] == date]
 
         elif t_start == t_end:
             print("hour")
@@ -136,29 +142,31 @@ class work():
                 (df['datetime'].dt.time >= t_start) &
                 (df['datetime'].dt.time <= t_end)
                 ]
-            del(filtered_df['datetime'])
+            del (filtered_df['datetime'])
             result = filtered_df
-
 
         if result.empty:
             result = "Задач в данном диапазоне нет!"
         return result
-    def delete_task(self,id):
+
+    def delete_task(self, id):
         id = int(id)
         df = pd.read_csv(self.path_tasks)
         df = df.drop(df[df['id'] == id].index)
         df.to_csv(self.path_tasks, index=False)
-    def update_task_id(self,id,new_task):
+
+    def update_task_id(self, id, new_task):
         id = int(id)
         df = pd.read_csv(self.path_tasks)
-        row = df[df['id']==id]
+        row = df[df['id'] == id]
         row['task'] = new_task
         self.delete_task(id)
         df = pd.read_csv(self.path_tasks)
         df = pd.concat([df, row], ignore_index=True)
         df.to_csv(self.path_tasks, index=False)
-    def add_list_item(self,response,user_name):
-        response ="электроника|лампочка, провод"
+
+    def add_list_item(self, response, user_name):
+        response = "электроника|лампочка, провод"
 
         df = pd.read_csv(self.path_list)
         name_list, values = response.split("|")
@@ -171,7 +179,8 @@ class work():
                 i = i.strip()
 
                 # print(l_join)
-                row = {"id":self.get_id(),"user_name": user_name, "list_name": name_list, "record": i, "status": 0,"join":l_join}
+                row = {"id": self.get_id(), "user_name": user_name, "list_name": name_list, "record": i, "status": 0,
+                       "join": l_join}
                 mass.append(row)
 
             new_df = pd.DataFrame(mass)
@@ -179,41 +188,25 @@ class work():
 
 
         else:
-            row = {"user_name": user_name, "list_name": name_list, "record": val[0].strip(), "status": 0, "join":l_join}
+            row = {"user_name": user_name, "list_name": name_list, "record": val[0].strip(), "status": 0,
+                   "join": l_join}
             row = pd.DataFrame([row])
             df = pd.concat([df, row], ignore_index=True)
 
         df.to_csv(self.path_list, index=False)
 
         return f"{values}.\nДобавлены в: {name_list}"
-    def search_list(self,user_name: str, list_name: str) -> pd.DataFrame:
+
+    def search_list(self, user_name: str, list_name: str) -> str | DataFrame:
         # user_name = "Evgen"
-        # list_name = "продуктовый магазин"
+        # list_name = "продукты"
+        check = self.check_list(user_name, list_name)
 
-        df = pd.read_csv(self.path_list)
-        user_df = df[df["user_name"]==user_name]
-        if user_df.empty:
+        if not isinstance(check, tuple):
+            return check
 
-            if (df["list_name"] == list_name).any():
+        return self.print_list(check[0])
 
-
-        else:
-            if (user_df["list_name"] == list_name).any():
-                result = user_df[user_df["list_name"] == list_name]
-
-            else:
-                result = f"У пользователя {user_name} нет списка {list_name}"
-
-        print(result)
-        l_join = self.get_list_join(user_name, list_name)
-        exit()
-
-        for user in l_join:
-            if user == user_name:
-                pass
-
-        df = df[(df['user_name']==user_name) | (df['join']==user_name)]
-        return df
     def get_list_join(self, user_name: str, name_list: str) -> list[str]:
         df = pd.read_csv(self.path_list_join)
         result = df[(df["user_name"] == user_name) & (df["name_list"] == name_list)]
@@ -223,8 +216,42 @@ class work():
         split = str(result).split(" ")
         return split
 
+    def check_list(self, user_name: str, list_name: str) -> str | tuple[int, str]:
+        df = pd.read_csv(self.path_users)
 
-#
-# #
-df = work()
-print(df.search_list("Dasha", "электроника"))
+        if user_name not in df["nik_tg"].values:
+            return "Пользователь не найден."
+
+        user_df = df[df["nik_tg"] == user_name]
+        str_list = user_df["user_list"].item()
+        mass_list = str_list.split(",")
+
+        for val in mass_list:
+            index, value = val.split("_")
+            if value == list_name:
+                return int(index), value
+
+        return f"У вас нет списка {list_name} , добавить?"
+
+    def get_user_lists(self, user_name):
+        df = pd.read_csv(self.path_users)
+        if user_name not in df["nik_tg"].values:
+            print(f"Пользователь: {user_name} не найден.(workDF)")
+            return []
+        df = df[df["nik_tg"] == user_name]
+        str_list = df["user_list"].item()
+        mass_list = str_list.split(",")
+        mass = []
+        for val in mass_list:
+            index, value = val.split("_")
+            mass.append(value)
+        return mass
+
+    def print_list(self, list_id: int) -> pd.DataFrame:
+        df = pd.read_csv(self.path_list)
+        df = df[df["list_id"] == list_id]
+        return df
+
+
+# df = work()
+# print(df.get_lists("Dasha"))

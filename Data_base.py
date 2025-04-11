@@ -27,10 +27,10 @@ def command_add(mess_text,user_name):
     return itog
 
 def command_search(mess_text, user_name):
-    # mess_text = "покажи список покупок|2025-03-20 07:45:24"
-    # user_name = "Evgen"
+    mess_text = "покажи список продуктов|2025-03-20 07:45:24"
+    user_name = "Evgen"
 
-    gpt_search = client(get_search())
+    gpt_search = client(get_search(user_name))
     response = gpt_search.chat(mess_text)
     split = response.split("|")
     if split[0] == "list":
@@ -47,4 +47,4 @@ def command_update_id(id, new_task):
     df.update_task_id(id,new_task)
 #
 # #
-# print(command_add(0,"Microgboss"))
+print(command_search(0,"Microgboss"))
