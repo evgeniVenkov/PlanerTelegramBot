@@ -214,7 +214,6 @@ class work():
 
         df = df[(df['user_name']==user_name) | (df['join']==user_name)]
         return df
-
     def get_list_join(self, user_name: str, name_list: str) -> list[str]:
         df = pd.read_csv(self.path_list_join)
         result = df[(df["user_name"] == user_name) & (df["name_list"] == name_list)]
