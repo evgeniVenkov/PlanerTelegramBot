@@ -9,13 +9,14 @@ api_key = os.getenv("KEY") # Берём ключ через функцию
 
 
 class client:
-    def __init__(self,promt,count_history = 3):
+    def __init__(self,promt,count_history = 3, model = "gpt-3.5-turbo"):
         """Инициализация API клиента и загрузка ключа"""
         self.client = openai.OpenAI(api_key=api_key)  # Новый клиент
         self.history = []  # История диалога
         self.system_prompt = promt
         self.first_request = True  # Флаг первого запроса
         self.count_history = count_history
+        self.model = model
     def chat(self, user_message):
         # #хз зачем потом придумаю :)
         # mass = user_message.split(" | ")
@@ -29,17 +30,17 @@ class client:
             self.history = []
             self.first_request = False
 
-        # Добавляем системное сообщение при первом запросе
+
         if self.first_request:
             self.history.append({"role": "system", "content": self.system_prompt})
             self.first_request = False
 
-        # Добавляем сообщение пользователя
+
         self.history.append({"role": "user", "content": user_message})
 
         try:
-            response = self.client.chat.completions.create(  # Новый синтаксис
-                model="gpt-3.5-turbo",
+            response = self.client.chat.completions.create(
+                model=self.model,
                 messages=self.history,
                 temperature=0.7
             )

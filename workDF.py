@@ -107,9 +107,9 @@ class work():
             return f"Ошибка при обновлении задач: {e}"
 
     def search_tasks(self, response, user_name):
-        # response = '2025-03-21 | 13:00:00 13:00:00'
+        # response = '2025-03-21|00:00:00 12:00:00'
 
-        date, time = response.split(" | ")
+        date, time = response.split("|")
         t_start, t_end = time.split(" ")
 
         day_time = "00:00:00"
@@ -145,7 +145,7 @@ class work():
             del (filtered_df['datetime'])
             result = filtered_df
 
-        if result.empty:
+        if result is None:
             result = "Задач в данном диапазоне нет!"
         return result
 
@@ -254,4 +254,4 @@ class work():
 
 
 # df = work()
-# print(df.get_lists("Dasha"))
+# print(df.search_tasks("Dasha","Microgboss"))

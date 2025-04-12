@@ -12,11 +12,12 @@ if not os.path.exists(FILE_PATH):
     df.to_csv(FILE_PATH, index=False)
 
 def command_add(mess_text,user_name):
-    # mess_text = "запиши завтра в 7 к стоматологу|2025-02-27 07:45:24"
+    mess_text = "добавь купить хлеб|2025-02-27 07:45:24"
 
-    gpt_add = client(get_task())
+    gpt_add = client(get_task(user_name), model="gpt-4-turbo")
     response = gpt_add.chat(mess_text)
     mess_split = response.split("|")
+
     if mess_split[0] == "task":
         print(response[5:])
         itog = df.add_task(response[5:],user_name)
@@ -27,10 +28,10 @@ def command_add(mess_text,user_name):
     return itog
 
 def command_search(mess_text, user_name):
-    mess_text = "покажи список продуктов|2025-03-20 07:45:24"
-    user_name = "Evgen"
+    # mess_text = "что нужно купить в аптеке|2025-03-20 07:45:24"
+    # user_name = "Evgen"
 
-    gpt_search = client(get_search(user_name))
+    gpt_search = client(get_search(user_name), model="gpt-4-turbo")
     response = gpt_search.chat(mess_text)
     split = response.split("|")
     if split[0] == "list":
@@ -45,6 +46,6 @@ def command_delete(id):
     df.delete_task(id)
 def command_update_id(id, new_task):
     df.update_task_id(id,new_task)
-#
-# #
-print(command_search(0,"Microgboss"))
+
+
+print(command_add(0,"Microgboss"))
