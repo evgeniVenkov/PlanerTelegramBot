@@ -1,7 +1,7 @@
 import os
 import openai
 from dotenv import load_dotenv
-from promt import get_search
+from promt import get
 
 
 load_dotenv()
@@ -57,13 +57,9 @@ class client:
         except Exception as e:
             return f" Ошибка при обращении к GPT: {e}"
 
-#
-# sys_prom = get_search()
-#
-# client = client(sys_prom)
-#
-# prom = "список покупок|2025-04-15 10:23:31"
-#
-# response = client.chat(prom)
-#
+sys_prom = get()
+client = client(sys_prom,model = "gpt-4-turbo")
+prom = "Evgen|2025-04-13 18:25:03|какие у меня задачи завтра до обеда?"
+response = client.chat(prom)
+
 
