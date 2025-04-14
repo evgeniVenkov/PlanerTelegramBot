@@ -5,7 +5,7 @@ from promt import get
 
 
 load_dotenv()
-api_key = os.getenv("KEY") # Берём ключ через функцию
+api_key = os.getenv("KEY")
 
 
 class client:
@@ -58,8 +58,21 @@ class client:
             return f" Ошибка при обращении к GPT: {e}"
 
 sys_prom = get()
-client = client(sys_prom,model = "gpt-4-turbo")
+client = client(sys_prom, model="gpt-4-turbo")
 prom = "Evgen|2025-04-13 18:25:03|какие у меня задачи завтра до обеда?"
 response = client.chat(prom)
 
 
+if response[:3] == "cm:":
+    mass = response[3:].split('|')
+    tip = mass[1]
+    if tip == "p_task":
+        print("task")
+    elif tip == "add_task":
+        pass
+    elif tip == "add_item":
+        pass
+    elif tip == "del_item":
+        pass
+    elif tip == "p_list":
+        pass
