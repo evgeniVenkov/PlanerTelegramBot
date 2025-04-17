@@ -2,7 +2,7 @@ import os
 import openai
 from dotenv import load_dotenv
 from promt import get
-
+from workDF import work
 
 load_dotenv()
 api_key = os.getenv("KEY")
@@ -59,17 +59,20 @@ class client:
 
 sys_prom = get()
 client = client(sys_prom, model="gpt-4-turbo")
-prom = "Evgen|2025-04-13 18:25:03|какие у меня задачи завтра до обеда?"
+prom = "Evgen|2025-04-13 18:25:03|завтра отвезти тещу к врачу"
 response = client.chat(prom)
 
+df = work()
 
 if response[:3] == "cm:":
     mass = response[3:].split('|')
+    user = mass[0]
+
     tip = mass[1]
     if tip == "p_task":
-        print("task")
+        result = df.search_tasks(mass[2:],user)
     elif tip == "add_task":
-        pass
+        result = df.add_task(mass[2:4],user)
     elif tip == "add_item":
         pass
     elif tip == "del_item":

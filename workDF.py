@@ -44,9 +44,10 @@ class work():
 
     def add_task(self, response, user_name):
         try:
-            # response = "2025-04-07 13:00:00|На концерт"
+         # response = "2025-04-07 13:00:00|На концерт"
 
-            time, task = response.split("|")
+            print(response)
+            time, task = response
             data, time = time.split(" ")
 
             free = self.check(data, time)
@@ -109,8 +110,8 @@ class work():
     def search_tasks(self, response, user_name):
         # response = '2025-03-21|00:00:00 12:00:00'
 
-        date, time = response.split("|")
-        t_start, t_end = time.split(" ")
+        print(response)
+        date, t_start, t_end = response
 
         day_time = "00:00:00"
         day_time = pd.to_datetime(day_time, format="%H:%M:%S").time()
