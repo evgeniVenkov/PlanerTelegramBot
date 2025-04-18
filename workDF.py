@@ -167,38 +167,39 @@ class work():
         df.to_csv(self.path_tasks, index=False)
 
     def add_list_item(self, response, user_name):
-        response = "электроника|лампочка, провод"
+        # response = ['продукты', 'молоко, яца']
 
         df = pd.read_csv(self.path_list)
-        name_list, values = response.split("|")
+        name_list, values = response
         val = values.split(",")
-        l_join = " ".join(self.get_list_join(user_name, name_list))
-        print(l_join)
+
+        # l_join = " ".join(self.get_list_join(user_name, name_list))
+        # print(l_join)
+
         if len(val) > 1:
             mass = []
             for i in val:
                 i = i.strip()
-
-                # print(l_join)
                 row = {"id": self.get_id(), "user_name": user_name, "list_name": name_list, "record": i, "status": 0,
-                       "join": l_join}
+                       "join": 0}
                 mass.append(row)
 
             new_df = pd.DataFrame(mass)
             df = pd.concat([df, new_df], ignore_index=True)
-
+            result = f"{values}.\nДобавлены в: {name_list}"
 
         else:
-            row = {"user_name": user_name, "list_name": name_list, "record": val[0].strip(), "status": 0,
-                   "join": l_join}
+            row = {"id": self.get_id(), "user_name": user_name, "list_name": name_list, "record": values, "status": 0,
+                   "join": 0}
             row = pd.DataFrame([row])
             df = pd.concat([df, row], ignore_index=True)
+            result = f"{values}.\nДобавлен в: {name_list}"
 
         df.to_csv(self.path_list, index=False)
 
-        return f"{values}.\nДобавлены в: {name_list}"
+        return result
 
-    def search_list(self, user_name: str, list_name: str) -> str | DataFrame:
+    def search_list(self, list_name: str, user_name: str) -> str | DataFrame:
         # user_name = "Evgen"
         # list_name = "продукты"
         check = self.check_list(user_name, list_name)
@@ -248,11 +249,11 @@ class work():
             mass.append(value)
         return mass
 
-    def print_list(self, list_id: int) -> pd.DataFrame:
+    def print_list(self, name_list: str) -> pd.DataFrame:
         df = pd.read_csv(self.path_list)
-        df = df[df["list_id"] == list_id]
+        df = df[df["list_name"] == name_list]
         return df
 
-
+#
 # df = work()
-# print(df.search_tasks("Dasha","Microgboss"))
+# print(df.add_list_item("Dasha","Microgboss"))

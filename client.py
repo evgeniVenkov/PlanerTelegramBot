@@ -57,25 +57,12 @@ class client:
         except Exception as e:
             return f" Ошибка при обращении к GPT: {e}"
 
-sys_prom = get()
-client = client(sys_prom, model="gpt-4-turbo")
-prom = "Evgen|2025-04-13 18:25:03|завтра отвезти тещу к врачу"
-response = client.chat(prom)
+# sys_prom = get()
+# client = client(sys_prom, model="gpt-4-turbo")
+# prom = "Evgen|2025-04-13 18:25:03|покажи список продуктов"
+# response = client.chat(prom)
+#
+# df = work()
 
-df = work()
 
-if response[:3] == "cm:":
-    mass = response[3:].split('|')
-    user = mass[0]
 
-    tip = mass[1]
-    if tip == "p_task":
-        result = df.search_tasks(mass[2:],user)
-    elif tip == "add_task":
-        result = df.add_task(mass[2:4],user)
-    elif tip == "add_item":
-        pass
-    elif tip == "del_item":
-        pass
-    elif tip == "p_list":
-        pass

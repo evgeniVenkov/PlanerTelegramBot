@@ -12,7 +12,7 @@ from triger import Pauk
 import pandas as pd
 from Data_base import command_add,command_search,command_delete,command_update_id
 from client import client
-from promt import get_сhat,get_status_command
+from promt import get_сhat,get_status_command,get
 from aiogram.fsm.storage.memory import MemoryStorage
 
 
@@ -149,15 +149,46 @@ async def echo_message(message: Message, state: FSMContext):
         return  # Если пользователь в режиме редактирования, пропускаем обработчик
 
     message_time = message.date.strftime("%Y-%m-%d %H:%M:%S")  # нужный формат
-    promt = f"{message.text}|{message_time}"
+    promt = f"|{message.text}|{message_time}"
 
     print(f"📩 {promt} ")
 
+    sys_prom = get()
+    gpt = client(sys_prom,model="gpt-4-turbo")
+    resource = client.chat()
+
+    if response[:3] == "cm:":
+        mass = response[3:].split('|')
+
+        user = mass[0]
+        tip = mass[1]
+
+        if tip == "p_task":
+            result = df.search_tasks(mass[2:], user)
+        elif tip == "add_task":
+            result = df.add_task(mass[2:4], user)
+        elif tip == "add_item":
+            result = df.add_list_item(mass[2:], user)
+        elif tip == "del_item":
+            pass
+        elif tip == "p_list":
+            result = df.print_list(mass[2])
+
+async def main():
+    print("✅ Бот запущен и готов к работе!")
+    await dp.start_polling(bot)
+
+
+
+if __name__ == "__main__":
+    asyncio.run(main())
+
+def old_main():
     result_trigger = Pauk(message.text)
 
     if result_trigger is not None:
 
-        result, tip = request_processing(result_trigger,promt,message.from_user.username)
+        result, tip = request_processing(result_trigger, promt, message.from_user.username)
 
         if tip == "list":
             if isinstance(result, pd.DataFrame):
@@ -168,7 +199,6 @@ async def echo_message(message: Message, state: FSMContext):
         elif isinstance(result, pd.DataFrame):
 
             for _, row in result.iterrows():
-
                 inline_keyboard = get_inliner(row)
                 # Отправляем сообщение с кнопками
                 await message.answer(
@@ -186,12 +216,3 @@ async def echo_message(message: Message, state: FSMContext):
             gpt = client(get_сhat())
             result = gpt.chat(promt)
         await message.answer(result)
-
-async def main():
-    print("✅ Бот запущен и готов к работе!")
-    await dp.start_polling(bot)
-
-
-
-if __name__ == "__main__":
-    asyncio.run(main())
