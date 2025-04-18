@@ -44,7 +44,7 @@ class work():
 
     def add_task(self, response, user_name):
         try:
-         # response = "2025-04-07 13:00:00|На концерт"
+            response = "2025-04-07 13:00:00|На концерт"
 
             print(response)
             time, task = response
@@ -254,6 +254,13 @@ class work():
         df = df[df["list_name"] == name_list]
         return df
 
+    def delete_list_item(self, id):
+        id = int(id)
+        df = pd.read_csv(self.path_list)
+        df = df.drop(df[df['id'] == id].index)
+        df.to_csv(self.path_list, index=False)
+
+
 #
-# df = work()
-# print(df.add_list_item("Dasha","Microgboss"))
+df = work()
+df.add_task("82","Evgen")
