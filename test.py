@@ -1,11 +1,5 @@
 import pandas as pd
+from pytz import timezone
 
-
-
-
-
-new_record = {"user": "user_name", "date": "data", "time": "time",
-                              "task": "task", "join": False, "status": False, "id": 0}
-
-df = pd.DataFrame([new_record])
-df.to_csv('Data_base/tasks.csv', index=False)
+moscow_tz = timezone("Europe/Moscow")
+message_time = message.date.astimezone(moscow_tz).strftime("%Y-%m-%d %H:%M:%S")

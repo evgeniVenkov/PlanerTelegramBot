@@ -15,7 +15,7 @@ from client import client
 from promt import get_сhat,get_status_command,get
 from aiogram.fsm.storage.memory import MemoryStorage
 from workDF import work
-
+from pytz import timezone
 
 
 
@@ -184,7 +184,9 @@ async def echo_message(message: Message, state: FSMContext):
 
     user = message.from_user.username
 
-    message_time = message.date.strftime("%Y-%m-%d %H:%M:%S")  # нужный формат
+    moscow_tz = timezone("Europe/Moscow")
+    message_time = message.date.astimezone(moscow_tz).strftime("%Y-%m-%d %H:%M:%S") # нужный формат
+
     promt = f"{user}|{message_time}|{message.text}"
 
     print(f"📩 {promt} ")

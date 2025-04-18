@@ -44,7 +44,7 @@ class work():
 
     def add_task(self, response, user_name):
         try:
-            response = "2025-04-07 13:00:00|На концерт"
+            # response = "2025-04-07 13:00:00|На концерт"
 
             print(response)
             time, task = response
@@ -261,6 +261,6 @@ class work():
         df.to_csv(self.path_list, index=False)
 
 
-#
-df = work()
-df.add_task("82","Evgen")
+# #
+# df = work()
+# df.add_task("82","Evgen")
