@@ -223,6 +223,8 @@ async def echo_message(message: Message, state: FSMContext):
                     f"📝 {row['record']}",
                     reply_markup=inline_keyboard
                 )
+            if result.empty:
+                await message.answer("Список пуст")
     elif tip == "p_task":
         if isinstance(result, pd.DataFrame):
 
@@ -233,6 +235,8 @@ async def echo_message(message: Message, state: FSMContext):
                     f"📝 {row['task']} ⏰ Время: {row['time']}",
                     reply_markup=inline_keyboard
                 )
+        if result.empty:
+            await message.answer("нет задач!")
     else:
         await message.answer(result)
 async def main():
