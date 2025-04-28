@@ -192,7 +192,7 @@ async def echo_message(message: Message, state: FSMContext):
     print(f"📩 {promt} ")
 
     sys_prom = get()
-    gpt = client(sys_prom,model="gpt-4-turbo")
+    gpt = client(sys_prom,model="gpt-4o")
     response = gpt.chat(promt)
 
     tip = None
