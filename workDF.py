@@ -249,9 +249,10 @@ class work():
             mass.append(value)
         return mass
 
-    def print_list(self, name_list: str) -> pd.DataFrame:
+    def print_list(self, name_list: str,user) -> pd.DataFrame:
+
         df = pd.read_csv(self.path_list)
-        df = df[df["list_name"] == name_list]
+        df = df[df["list_name"] == name_list[0]]
         return df
 
     def delete_list_item(self, id):

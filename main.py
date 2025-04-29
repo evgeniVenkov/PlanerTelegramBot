@@ -40,7 +40,7 @@ router = Router()
 
 # Подключаем маршруты к диспетчеру
 dp.include_router(router)
-# Определяем состояния
+
 class EditTaskState(StatesGroup):
     waiting_for_new_task = State()
 
@@ -173,6 +173,11 @@ def get_inliner_list(row):
 
     # Создаём InlineKeyboardMarkup из билдера
     return builder.as_markup()
+def get_dict_fn():
+    dict = {"p_task": df.search_tasks, "add_task": df.add_task,
+            "del_item": None,
+            "p_list": df.print_list, "add_item": df.add_list_item}
+    return dict
 # ---------------------------------------------------------------------
 @dp.message()
 async def echo_message(message: Message, state: FSMContext):
@@ -198,23 +203,19 @@ async def echo_message(message: Message, state: FSMContext):
     tip = None
     result = None
 
-
     if response[:3] == "cm:":
         mass = response[3:].split('|')
         tip = mass[1]
+        dict_fn = get_dict_fn()
 
-        if tip == "p_task":
-            result = df.search_tasks(mass[2:], user)
-        elif tip == "add_task":
-            result = df.add_task(mass[2:4], user)
-        elif tip == "add_item":
-            result = df.add_list_item(mass[2:], user)
-        elif tip == "del_item":
-            pass
-        elif tip == "p_list":
-            result = df.print_list(mass[2])
+        try:
+            result = dict_fn[tip](mass[2:], user)
+        except Exception as e:
+            result = f"(main)\n{e}"
+
     else:
         result = response
+
     if tip == "p_list":
         if isinstance(result, pd.DataFrame):
             for _, row in result.iterrows():
