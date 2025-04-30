@@ -250,7 +250,7 @@ class work():
         return mass
 
     def print_list(self, name_list: str,user) -> pd.DataFrame:
-
+        # name_list = ['продукты']
         df = pd.read_csv(self.path_list)
         df = df[df["list_name"] == name_list[0]]
         return df

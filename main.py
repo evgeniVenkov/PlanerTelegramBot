@@ -190,7 +190,7 @@ async def echo_message(message: Message, state: FSMContext):
     user = message.from_user.username
 
     moscow_tz = timezone("Europe/Moscow")
-    message_time = message.date.astimezone(moscow_tz).strftime("%Y-%m-%d %H:%M:%S") # нужный формат
+    message_time = message.date.astimezone(moscow_tz).strftime("%Y-%m-%d %H:%M:%S")
 
     promt = f"{user}|{message_time}|{message.text}"
 
@@ -228,7 +228,6 @@ async def echo_message(message: Message, state: FSMContext):
                 await message.answer("Список пуст")
     elif tip == "p_task":
         if isinstance(result, pd.DataFrame):
-
             for _, row in result.iterrows():
                 inline_keyboard = get_inliner_task(row)
                 # Отправляем сообщение с кнопками
